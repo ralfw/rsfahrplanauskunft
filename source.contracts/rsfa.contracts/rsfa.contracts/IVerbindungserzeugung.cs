@@ -6,6 +6,7 @@ namespace rsfa.contracts
 {
     public interface IVerbindungserzeugung
     {
-        Verbindung[] Verbindugen_zu_Pfaden_bilden(IEnumerable<Pfad> pfade, DateTime startzeit);
+        void Verbindugen_zu_Pfad_bilden(Pfad pfad, DateTime startzeit);
+        event Action<Verbindung> OnVerbindung;
     }
 }
