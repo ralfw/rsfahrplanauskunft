@@ -63,8 +63,20 @@ namespace VerbindungsErzeugung
         {
             foreach (var verbindung in verbindungen)
             {
-                for (int i = 0; i < verbindung.Pfad.Strecken.Length; i++)
+                var startHalteStelle = verbindung.Pfad.Starthaltestellenname;
+                var startZeitAtHalteStelle = verbindung.Fahrtzeiten[0].Abfahrtszeit;
+
+                for (var i = 0; i < verbindung.Pfad.Strecken.Length; i++)
                 {
+                    verbindung.Fahrtzeiten[i].Ankunftszeit = startZeitAtHalteStelle;
+
+                    var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(
+                        verbindung.Pfad.Strecken[i].Linienname,
+                        startHalteStelle);
+
+                    verbindung.Fahrtzeiten[i].Ankunftszeit = startZeitAtHalteStelle + dauer;
+
+                    startHalteStelle = verbindung.Pfad.Strecken[i].Zielhaltestellenname;
                 }
             }            
 
