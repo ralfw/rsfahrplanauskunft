@@ -14,15 +14,25 @@ namespace rsfa.FahrplanProvider
         public FahrplanProvider()
         {
             Linien = new List<Linie>();
-            Linien.Add(new Linie("Kaiser-Franz Linie 8", 
+            Linien.Add(new Linie("Kaiser-Franz Linie 8 West", 
                 new string[] { "Untergiesing", "Grünwalder Stadion", "Staatskanzlei", "Olympiastation", "Kufstein", "Lichtgestalthausen" },
                 new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), }));
 
-            Linien.Add(new Linie("Transrapid Linie Stoiber", new string[] { "Wolfratshausen", "Staatskanzlei", "Brüssel", "Lichtgestalthausen" },
-                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), }));
+            Linien.Add(new Linie("Transrapid Linie Stoiber Nord", new string[] { "Untergiesing", "Wolfratshausen", "Staatskanzlei", "Brüssel", "Lichtgestalthausen" },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2) }));
 
-            Linien.Add(new Linie("Hans-Dampf-Seehofer Linie", new string[] { "Ingolstadt", "Ingolstädter Strasse", "Staatskanzlei", "Bei der Freundin in Berlin", "Obertupfing" },
+            Linien.Add(new Linie("Hans-Dampf-Seehofer Linie Ost", new string[] { "Lichtgestalthausen", "Ingolstadt", "Ingolstädter Strasse", "Staatskanzlei", "Bei der Freundin in Berlin", "Obertupfing", "Untergiesing" },
                 new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)}));
+
+            Linien.Add(new Linie("Kaiser-Franz Linie 8 Ost",
+              new string[] { "Lichtgestalthausen", "Kufstein", "Olympiastation", "Staatskanzlei", "Grünwalder Stadion", "Untergiesing",  },
+              new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), }));
+
+            Linien.Add(new Linie("Transrapid Linie Stoiber Süd", new string[] { "Lichtgestalthausen", "Brüssel", "Staatskanzlei", "Wolfratshausen", "Untergiesing",  },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2) }));
+
+            Linien.Add(new Linie("Hans-Dampf-Seehofer Linie West", new string[] { "Untergiesing", "Obertupfing", "Bei der Freundin in Berlin", "Staatskanzlei", "Ingolstädter Strasse", "Ingolstadt", "Lichtgestalthausen",  },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2) }));
         }
 
         public DateTime[] Abfahrtszeiten_bei_Haltestelle(string linienname, string haltestellenname)
