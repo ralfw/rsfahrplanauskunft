@@ -10,6 +10,13 @@ namespace VerbindungsErzeugung
 {
     public class VerbindungsErzeugung : IVerbindungserzeugung
     {
+        private IFahrplanProvider fahrplanProvider;
+
+        public VerbindungsErzeugung(IFahrplanProvider fahrplanProvider)
+        {
+            this.fahrplanProvider = fahrplanProvider;
+        }
+
         public event Action<Verbindung> OnVerbindung;
 
         public void Verbindugen_zu_Pfad_bilden(Pfad pfad, DateTime startzeit)
@@ -23,12 +30,12 @@ namespace VerbindungsErzeugung
             var verbOhneZeit = this.Verbindungenerzeugen(pfad);
             var verbMitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
             var verbEingeschraenkt = this.EinschraenkenNachFahrzeit(verbMitZeit, startzeit);
-            
+
             if (this.OnVerbindung != null)
             {
                 foreach (var item in verbEingeschraenkt)
                 {
-                    OnVerbindung(item);                
+                    OnVerbindung(item);
                 }
             }
         }
@@ -36,13 +43,32 @@ namespace VerbindungsErzeugung
         private Verbindung[] Verbindungenerzeugen(Pfad pfad)
         {
             var verbindungen = new List<Verbindung>();
+            var linienName = pfad.Strecken.First().Linienname;
+            var startHalteStelle = pfad.Starthaltestellenname;
+
+            var abfahrtszeiten = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(linienName, startHalteStelle);
+
+            for (int i = 0; i < abfahrtszeiten.Length; i++)
+            {
+                var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
+
+                verbindung.Fahrtzeiten[0].Abfahrtszeit = abfahrtszeiten[i];
+                verbindungen.Add(verbindung);
+            }
 
             return verbindungen.ToArray();
         }
 
-        private Verbindung[] FahrzeitenZuordnen(IEnumerable<Verbindung> verbindungen)
+        private Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
         {
-            return verbindungen.ToArray(); ;
+            foreach (var verbindung in verbindungen)
+            {
+                for (int i = 0; i < verbindung.Pfad.Strecken.Length; i++)
+                {
+                }
+            }            
+
+            return verbindungen.ToArray();
         }
 
         private Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
