@@ -24,7 +24,9 @@ namespace rsfa.FahrplanProvider
         {
             return new string[3] { "Hintertupfing", "Vordertupfing", "Obertupfing" };
         }
-
+        /// <summary>
+        /// /sdfsad
+        /// </summary>
         public string[] Liniennamen
         {
             get
