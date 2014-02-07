@@ -16,7 +16,7 @@ namespace rsfa.app
             var fpprov = new FahrplanProvider.FahrplanProvider();
             var netz = new Netzplanberechnung.Netzplanberechnung();
             var pfade = new pfadbestimmung.Pfadbestimmung();
-            var verb = new VerbindungsErzeugung.VerbindungsErzeugung();
+            var verb = new VerbindungsErzeugung.VerbindungsErzeugung(fpprov);
             var bewert = new Verbindungsbewertung();
 
             pfade.OnPfad += pfad => verb.Verbindugen_zu_Pfad_bilden(pfad, kommando.Startzeit);

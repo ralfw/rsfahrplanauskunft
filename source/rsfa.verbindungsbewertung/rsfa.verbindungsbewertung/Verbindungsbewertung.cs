@@ -18,6 +18,9 @@ namespace rsfa.verbindungsbewertung
         {
             _ts.TraceInformation("Verbindungen_bewerten");
             var v = new Verbindung();
+            var p = new Pfad();
+            p.Starthaltestellenname = "Stachus";
+            p.Strecken = new[] {new Strecke{Linienname="S6 ost", Zielhaltestellenname = "Marienplatz"}};
             OnVerbindungenKomplett(new[] {v});
         }
 
