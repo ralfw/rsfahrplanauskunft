@@ -11,18 +11,39 @@ namespace rsfa.verbindungsbewertung
 {
     public class Verbindungsbewertung : IVerbindungsbewertung
     {
-        TraceSource _ts = new TraceSource("Verbindungsbewertung");
+        readonly TraceSource _ts = new TraceSource("Verbindungsbewertung");
 
 
         public void Verbindungen_bewerten(Verbindung verbindung)
         {
-            _ts.TraceInformation("Verbindungen_bewerten");
-            var v = new Verbindung();
-            var p = new Pfad();
-            p.Starthaltestellenname = "Stachus";
-            p.Strecken = new[] {new Strecke{Linienname="S6 ost", Zielhaltestellenname = "Marienplatz"}};
-            OnVerbindungenKomplett(new[] {v});
+            Verbindung_registrieren(verbindung, 
+                Auswerten);
         }
+
+
+        private List<Verbindung> _verbindungen = new List<Verbindung>(); 
+        void Verbindung_registrieren(Verbindung verbindung, Action<Verbindung[]> onEndOfStream)
+        {
+            if (verbindung != null)
+                _verbindungen.Add(verbindung);
+            else
+            {
+                var tmp = _verbindungen;
+                _verbindungen = null;
+                onEndOfStream(tmp.ToArray());
+            }
+        }
+
+
+        void Auswerten(IEnumerable<Verbindung> verbindungen)
+        {
+            _ts.TraceInformation("Verbindungen auswerten");
+
+            var scored = verbindungen.Select(v => new { Score = v.Pfad.Strecken.Length, Verbindung = v });
+            var sorted = scored.OrderBy(s => s.Score).Select(s => s.Verbindung).Take(5);
+            OnVerbindungenKomplett(sorted.ToArray());
+        }
+
 
         public event Action<Verbindung[]> OnVerbindungenKomplett;
     }

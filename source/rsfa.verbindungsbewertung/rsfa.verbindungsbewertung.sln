@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rsfa.verbindungsbewertung", "rsfa.verbindungsbewertung\rsfa.verbindungsbewertung.csproj", "{0B91BA57-6AC1-49E6-AC3B-CA71BA71AE35}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rsfa.verbindungsbewertung.tests", "rsfa.verbindungsbewertung.tests\rsfa.verbindungsbewertung.tests.csproj", "{9805D5D4-E775-405B-A0C6-D03F46D299EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{0B91BA57-6AC1-49E6-AC3B-CA71BA71AE35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B91BA57-6AC1-49E6-AC3B-CA71BA71AE35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B91BA57-6AC1-49E6-AC3B-CA71BA71AE35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9805D5D4-E775-405B-A0C6-D03F46D299EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9805D5D4-E775-405B-A0C6-D03F46D299EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9805D5D4-E775-405B-A0C6-D03F46D299EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9805D5D4-E775-405B-A0C6-D03F46D299EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
