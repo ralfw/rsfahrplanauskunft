@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using rsfa.contracts;
 using rsfa.contracts.daten;
 
@@ -11,6 +9,7 @@ namespace rsfa.Netzplanberechnung
     public class Netzplanberechnung : INetzplanberechnung
     {
         private IFahrplanProvider fahrplanprovider;
+        private Dictionary<string, Haltestelle> alleHalteStellen = new Dictionary<string, Haltestelle>();
 
         public Netzplanberechnung(IFahrplanProvider fahrplanProvider)
         {
@@ -19,13 +18,12 @@ namespace rsfa.Netzplanberechnung
 
         public Netzplan Netzplan_berechnen()
         {
-            var netzplan = new Netzplan { Haltestellen = this.FülleHalteStellen().ToArray() };
+            var netzplan = new Netzplan { Haltestellen = this.BerechneHalteStellen().ToArray() };
             return netzplan;
         }
 
-        private IEnumerable<Haltestelle> FülleHalteStellen()
+        private IEnumerable<Haltestelle> BerechneHalteStellen()
         {
-            var alleHalteStellen = this.AlleHaltestellen();
             foreach (var linienName in this.fahrplanprovider.Liniennamen)
             {
                 var haltestellenFürLinie = this.fahrplanprovider.Haltestellen_für_Linie(linienName);
@@ -33,8 +31,10 @@ namespace rsfa.Netzplanberechnung
                 {
                     var haltestellenName = haltestellenFürLinie[index - 1];
                     var zielHaltestellenName = haltestellenFürLinie[index];
-                    var halteStelle = alleHalteStellen[haltestellenName];
-                    var zielHalteStelle = alleHalteStellen[zielHaltestellenName];
+
+                    Haltestelle halteStelle = this.FindeOderErzeugeHalteStelle(haltestellenName);
+                    Haltestelle zielHalteStelle = this.FindeOderErzeugeHalteStelle(zielHaltestellenName);
+
                     this.Strecke_Hinzufügen(halteStelle, linienName, zielHalteStelle);
                 }
             }
@@ -42,23 +42,18 @@ namespace rsfa.Netzplanberechnung
             return alleHalteStellen.Values;
         }
 
-        private Dictionary<string, Haltestelle> AlleHaltestellen()
+        private Haltestelle FindeOderErzeugeHalteStelle(String haltestellenName)
         {
-            var halteStellen = new Dictionary<string, Haltestelle>();
-            foreach (var linienName in this.fahrplanprovider.Liniennamen)
+            if (!alleHalteStellen.ContainsKey(haltestellenName))
             {
-                foreach (var haltestellenName in this.fahrplanprovider.Haltestellen_für_Linie(linienName)
-                    .Where(haltestellenName => !halteStellen.ContainsKey(haltestellenName)))
+                alleHalteStellen[haltestellenName] = new Haltestelle
                 {
-                    halteStellen[haltestellenName] = new Haltestelle
-                                                         {
-                                                             Strecken = new Strecke[] { }, 
-                                                             Name = haltestellenName
-                                                         };
-                }
+                    Strecken = new Strecke[] { },
+                    Name = haltestellenName
+                };
             }
 
-            return halteStellen;
+            return alleHalteStellen[haltestellenName];
         }
 
         private void Strecke_Hinzufügen(Haltestelle halteStelle, string linienname, Haltestelle ziel)
