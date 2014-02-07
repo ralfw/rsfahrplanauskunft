@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pfadbestimmung", "Pfadbestimmung\Pfadbestimmung.csproj", "{04DC80B8-4FF9-488D-8E16-3CB122B883CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PfadbestimmungTests", "PfadbestimmungTests\PfadbestimmungTests.csproj", "{0DF761AF-51D6-49D8-B900-D78DF6F0CB25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{04DC80B8-4FF9-488D-8E16-3CB122B883CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04DC80B8-4FF9-488D-8E16-3CB122B883CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04DC80B8-4FF9-488D-8E16-3CB122B883CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DF761AF-51D6-49D8-B900-D78DF6F0CB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DF761AF-51D6-49D8-B900-D78DF6F0CB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DF761AF-51D6-49D8-B900-D78DF6F0CB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DF761AF-51D6-49D8-B900-D78DF6F0CB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

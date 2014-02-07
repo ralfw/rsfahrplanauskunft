@@ -21,26 +21,23 @@ namespace rsfa.pfadbestimmung
 
       public void Alle_Pfade_bestimmen(Netzplan netzplan, string starthaltestellenname, string zielhaltestellenname)
       {
-         if (netzplan == null)
+         this.netzplan = netzplan;
+         if (this.netzplan == null)
          {
             throw new ArgumentNullException("netzplan");
          }
 
-         var starthaltestelle = this.FindHaltestelle(starthaltestellenname);
-         if (starthaltestelle == null)
+         this.starthaltestelle = this.FindHaltestelle(starthaltestellenname);
+         if (this.starthaltestelle == null)
          {
             throw new InvalidOperationException("Starthaltestelle nicht gefunden");
          }
 
-         var stophaltestelle = FindHaltestelle(zielhaltestellenname);
-         if (stophaltestelle == null)
+         this.zielhaltestelle = FindHaltestelle(zielhaltestellenname);
+         if (this.zielhaltestelle == null)
          {
             throw new InvalidOperationException("Zielhaltestelle nicht gefunden");
          }
-
-         this.netzplan = netzplan;
-         this.starthaltestelle = starthaltestelle;
-         this.zielhaltestelle = stophaltestelle;
 
          var initialKandidat = new PfadKandidat(starthaltestelle);
 
@@ -60,8 +57,17 @@ namespace rsfa.pfadbestimmung
             return; // we can also stop here, as everything else will cause an reject anyway
          }
 
-         var zielhaltestellenname = kandidat.Strecken.Last().Zielhaltestellenname;
-         var zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
+         Haltestelle zielhaltestelle;
+         if (kandidat.Strecken.Count == 0)
+         {
+            zielhaltestelle = kandidat.Starthaltestelle;
+         }
+         else
+         {
+            var zielhaltestellenname = kandidat.Strecken.Last().Zielhaltestellenname;
+            zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
+         }
+
          foreach (var strecke in zielhaltestelle.Strecken)
          {
             var nextKandidat = kandidat.Clone();
@@ -77,6 +83,11 @@ namespace rsfa.pfadbestimmung
 
       private Boolean Reject(PfadKandidat kandidat)
       {
+         if (kandidat.Strecken.Count == 0)
+         {
+            return false;
+         }
+
          if (kandidat.Strecken.Last().Zielhaltestellenname == this.starthaltestelle.Name)
          {
             return true;
@@ -92,6 +103,11 @@ namespace rsfa.pfadbestimmung
 
       private Boolean Accept(PfadKandidat kandidat)
       {
+         if (kandidat.Strecken.Count == 0)
+         {
+            return false;
+         }
+
          if (kandidat.Strecken.Last().Zielhaltestellenname == this.zielhaltestelle.Name)
          {
             return true;
