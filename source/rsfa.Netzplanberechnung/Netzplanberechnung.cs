@@ -12,6 +12,7 @@ namespace Netzplanberechnung
     {
         public Netzplan Netzplan_berechnen()
         {
+            // Hallo
             return new Netzplan();
         }
     }
