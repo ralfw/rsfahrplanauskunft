@@ -53,6 +53,9 @@ x64/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+*.fbl7
+*.fbpinf
+
 *_i.c
 *_p.c
 *.ilk
