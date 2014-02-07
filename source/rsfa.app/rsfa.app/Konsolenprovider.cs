@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using rsfa.contracts.daten;
 
 namespace rsfa.app
@@ -7,6 +8,10 @@ namespace rsfa.app
     {
         public void Verbindungen_anzeigen(IEnumerable<Verbindung> verbindungen)
         {
+            foreach (var v in verbindungen)
+            {
+                Console.WriteLine("Verb: {0}", v.Pfad.Starthaltestellenname);
+            }
         }
     }
 }
