@@ -71,7 +71,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] Verbindungenerzeugen(Pfad pfad)
+        internal Verbindung[] Verbindungenerzeugen(Pfad pfad)
         {
             var linienName = pfad.Strecken.First().Linienname;
             var startHalteStelle = pfad.Starthaltestellenname;
@@ -101,7 +101,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
+        internal Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
         {
             foreach (var verbindung in verbindungen)
             {
@@ -148,7 +148,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
+        internal Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
         {
             return verbindungen.Where(verb => verb.Fahrtzeiten[0].Abfahrtszeit >= startZeit).ToArray();
         }
