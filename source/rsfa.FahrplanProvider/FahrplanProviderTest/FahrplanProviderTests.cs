@@ -10,7 +10,7 @@ namespace rsfa.FahrplanProvider
         public void Abfahrtszeiten_bei_HaltestelleTest()
         {
             var fahrplanProvider = new FahrplanProvider();
-            var zeiten = fahrplanProvider.Abfahrtszeiten_bei_Haltestelle("Transrapid Linie Stoiber", "Lichtgestalthausen");
+            var zeiten = fahrplanProvider.Abfahrtszeiten_bei_Haltestelle("Transrapid Linie Stoiber Nord", "Lichtgestalthausen");
             Assert.IsNotNull(zeiten);
             Assert.IsTrue(zeiten.Length == 3, "Wrong length");
         }
@@ -19,7 +19,7 @@ namespace rsfa.FahrplanProvider
         public void Fahrtdauer_für_StreckeTest()
         {
             var fahrplanProvider = new FahrplanProvider();
-            TimeSpan fahrtdauer = fahrplanProvider.Fahrtdauer_für_Strecke("Transrapid Linie Stoiber", "Lichtgestalthausen");
+            TimeSpan fahrtdauer = fahrplanProvider.Fahrtdauer_für_Strecke("Transrapid Linie Stoiber Nord", "Lichtgestalthausen");
             Assert.IsNotNull(fahrtdauer);
         }
 
@@ -27,7 +27,7 @@ namespace rsfa.FahrplanProvider
         public void Haltestellen_für_LinieTest()
         {
             var fahrplanProvider = new FahrplanProvider();
-            string[] haltestellen = fahrplanProvider.Haltestellen_für_Linie("Transrapid Linie Stoiber");
+            string[] haltestellen = fahrplanProvider.Haltestellen_für_Linie("Transrapid Linie Stoiber Nord");
             Assert.IsNotNull(haltestellen);
         }
 
