@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="rsfa.contracts">
+      <HintPath>..\..\..\bin.contracts\rsfa.contracts.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -52,6 +55,12 @@
   <ItemGroup>
     <Compile Include="VerbindungsErzeugungTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VerbindungsErzeugung\VerbindungsErzeugung.csproj">
+      <Project>{ba547ef3-ed0a-43b5-81ec-91d7ffcb70db}</Project>
+      <Name>VerbindungsErzeugung</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
