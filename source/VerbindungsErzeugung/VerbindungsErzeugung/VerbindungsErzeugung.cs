@@ -85,8 +85,7 @@
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
 
                 // Startzeit der Verbindung ist nur hier bekannt
-                verbindung.Fahrtzeiten[0] = new Fahrtzeit();
-                verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
+                verbindung.Fahrtzeiten[0] = new Fahrtzeit { Abfahrtszeit = zeit };
                 verbindungen[index] = verbindung;
             }
 
@@ -122,7 +121,7 @@
                     // Rollator use case wird nicht berücksichtigt
                     verbindung.Fahrtzeiten[i].Abfahrtszeit = startZeitenHalteStelle.First(zeit => zeit >= ankunftzeitLetzteStrecke);
 
-                    // Frage the Fahrplan über die Dauer der Strecke
+                    // Frage den Fahrplan über die Dauer der Strecke
                     var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
 
                     // Ankunftszeit
