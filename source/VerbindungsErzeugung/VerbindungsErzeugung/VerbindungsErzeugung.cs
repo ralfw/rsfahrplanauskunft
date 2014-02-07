@@ -41,7 +41,12 @@
         /// </param>
         public void Verbindugen_zu_Pfad_bilden(Pfad pfad, DateTime startzeit)
         {
-            if (pfad == null && this.OnVerbindung != null)
+            if (this.OnVerbindung == null)
+            {
+                return;
+            }
+
+            if (pfad == null)
             {
                 this.OnVerbindung(null);
                 return;
@@ -51,11 +56,6 @@
             var verbMitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
             var verbEingeschraenkt = this.EinschraenkenNachFahrzeit(verbMitZeit, startzeit);
 
-            if (this.OnVerbindung == null)
-            {
-                return;
-            }
-            
             foreach (var item in verbEingeschraenkt)
             {
                 this.OnVerbindung(item);
