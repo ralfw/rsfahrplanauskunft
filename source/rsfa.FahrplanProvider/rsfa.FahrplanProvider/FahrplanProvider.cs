@@ -9,20 +9,67 @@ namespace rsfa.FahrplanProvider
 {
     public class FahrplanProvider : IFahrplanProvider
     {
+        private List<Linie> Linien { get; set; }
+
+        public FahrplanProvider()
+        {
+            Linien = new List<Linie>();
+            Linien.Add(new Linie("Kaiser-Franz Linie 8", 
+                new string[] { "Untergiesing", "Grünwalder Stadion", "Staatskanzlei", "Olympiastation", "Kufstein", "Lichtgestalthausen" },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), }));
+
+            Linien.Add(new Linie("Transrapid Linie Stoiber", new string[] { "Wolfratshausen", "Staatskanzlei", "Brüssel", "Lichtgestalthausen" },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), }));
+
+            Linien.Add(new Linie("Hans-Dampf-Seehofer Linie", new string[] { "Ingolstadt", "Ingolstädter Strasse", "Staatskanzlei", "Bei der Freundin in Berlin", "Obertupfing" },
+                new TimeSpan[] { TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)}));
+        }
 
         public DateTime[] Abfahrtszeiten_bei_Haltestelle(string linienname, string haltestellenname)
         {
-            return new DateTime[3] { DateTime.Now.AddMinutes(5), DateTime.Now.AddMinutes(10), DateTime.Now.AddMinutes(15), };
+            Linie linie =null;
+            TimeSpan linienOffset = TimeSpan.FromMinutes(0);
+            
+            foreach (var item in this.Linien)
+            {
+                if (item.LinienNamen == linienname)
+                {
+                    linienOffset += TimeSpan.FromMinutes(3);
+                    linie = item;
+                    break;
+                }
+            }
+
+            TimeSpan haltestellenOffset = TimeSpan.FromMinutes(0);
+
+            for (int index= 0;index < linie.Haltestellen.Count(); index++)
+            {
+                haltestellenOffset += linie.Timespan[index];
+                if (linie.Haltestellen[index] == haltestellenname)
+                {
+                    return new DateTime[] { new DateTime(2014, 2, 7, 16, 38, 0) + haltestellenOffset + linienOffset, new DateTime(2014, 2, 7, 16, 43, 0) + haltestellenOffset, new DateTime(2014, 2, 7, 16, 48, 0) + haltestellenOffset + linienOffset, };
+                }
+            }
+
+            throw new NotImplementedException();
         }
 
-        public TimeSpan[] Fahrtdauern_für_Linie(string linienname)
+        public TimeSpan Fahrtdauer_für_Strecke(string linienname, string haltestelle)
         {
-            return new TimeSpan[3] { TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(4), TimeSpan.FromMinutes(3), };
+            return TimeSpan.FromMinutes(3);
         }
 
         public string[] Haltestellen_für_Linie(string linienname)
         {
-            return new string[3] { "Hintertupfing", "Vordertupfing", "Obertupfing" };
+            foreach (var item in this.Linien)
+            {
+                if (item.LinienNamen == linienname)
+                {
+                    return item.Haltestellen;
+                }
+            }
+            
+            throw new NotImplementedException("Linienname nicht bekannt.");
         }
         /// <summary>
         /// /sdfsad
@@ -31,8 +78,22 @@ namespace rsfa.FahrplanProvider
         {
             get
             {
-                return new string[4] { "Kaiser-Franz Linie 8", "Transrapid Linie Stoiber", "Franz-Josef Linie 15", "Hans-Dampf-Seehofer Linie"};
+                return new string[4] { "Kaiser-Franz Linie 8", "Transrapid Linie Stoiber", "Transrapid Linie Stoiber", "Hans-Dampf-Seehofer Linie" };
             }
+        }
+
+        private class Linie
+        {
+            internal Linie(string linienName, string[] haltestellen, TimeSpan[] timespan)
+            {
+                this.LinienNamen = linienName;
+                this.Haltestellen = haltestellen;
+                this.Timespan = timespan;
+            }
+
+            public string LinienNamen { get; set; }
+            public string[] Haltestellen { get; set; }
+            public TimeSpan[] Timespan { get; set; }
         }
     }
 }
