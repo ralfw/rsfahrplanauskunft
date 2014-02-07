@@ -56,7 +56,25 @@ namespace rsfa.FahrplanProvider
 
         public TimeSpan Fahrtdauer_für_Strecke(string linienname, string haltestelle)
         {
-            return TimeSpan.FromMinutes(3);
+            Linie linie = null;
+            foreach (var item in this.Linien)
+            {
+                if (item.LinienNamen == linienname)
+                {
+                    linie = item;
+                    break;
+                }
+            }
+
+            for (int index = 0; index < linie.Haltestellen.Count(); index++)
+            {
+                if (linie.Haltestellen[index] == haltestelle)
+                {
+                    return linie.Timespan[index];
+                }
+            }
+
+            throw new NotImplementedException();
         }
 
         public string[] Haltestellen_für_Linie(string linienname)
@@ -71,6 +89,7 @@ namespace rsfa.FahrplanProvider
             
             throw new NotImplementedException("Linienname nicht bekannt.");
         }
+
         /// <summary>
         /// /sdfsad
         /// </summary>
@@ -78,7 +97,7 @@ namespace rsfa.FahrplanProvider
         {
             get
             {
-                return new string[4] { "Kaiser-Franz Linie 8", "Transrapid Linie Stoiber", "Transrapid Linie Stoiber", "Hans-Dampf-Seehofer Linie" };
+                return new string[3] { "Kaiser-Franz Linie 8", "Transrapid Linie Stoiber", "Hans-Dampf-Seehofer Linie" };
             }
         }
 
