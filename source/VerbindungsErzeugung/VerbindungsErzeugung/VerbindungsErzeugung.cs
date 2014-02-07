@@ -85,6 +85,7 @@
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
 
                 // Startzeit der Verbindung ist nur hier bekannt
+                verbindung.Fahrtzeiten[0] = new Fahrtzeit();
                 verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
                 verbindungen[index] = verbindung;
             }
