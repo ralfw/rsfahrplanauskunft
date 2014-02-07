@@ -3,6 +3,6 @@
     public class Strecke
     {
         public string Linienname;
-        public Haltestelle Ziel;
+        public string Zielhaltestellenname;
     }
 }
