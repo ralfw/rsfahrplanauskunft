@@ -1,27 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using rsfa.contracts;
-using rsfa.contracts.daten;
-
-namespace VerbindungsErzeugung
+﻿namespace VerbindungsErzeugung
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using rsfa.contracts;
+    using rsfa.contracts.daten;
+
     public class VerbindungsErzeugung : IVerbindungserzeugung
     {
+        /// <summary>
+        /// The fahrplan provider.
+        /// </summary>
         private IFahrplanProvider fahrplanProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VerbindungsErzeugung"/> class.
+        /// </summary>
+        /// <param name="fahrplanProvider">
+        /// The fahrplan provider.
+        /// </param>
         public VerbindungsErzeugung(IFahrplanProvider fahrplanProvider)
         {
             this.fahrplanProvider = fahrplanProvider;
         }
 
+        /// <summary>
+        /// The on verbindung.
+        /// </summary>
         public event Action<Verbindung> OnVerbindung;
 
+        /// <summary>
+        /// The verbindugen_zu_ pfad_bilden.
+        /// </summary>
+        /// <param name="pfad">
+        /// The pfad.
+        /// </param>
+        /// <param name="startzeit">
+        /// The startzeit.
+        /// </param>
         public void Verbindugen_zu_Pfad_bilden(Pfad pfad, DateTime startzeit)
         {
-            if (pfad == null && this.OnVerbindung != null)
+            if (this.OnVerbindung == null)
+            {
+                return;
+            }
+
+            if (pfad == null)
             {
                 this.OnVerbindung(null);
                 return;
@@ -31,61 +56,102 @@ namespace VerbindungsErzeugung
             var verbMitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
             var verbEingeschraenkt = this.EinschraenkenNachFahrzeit(verbMitZeit, startzeit);
 
-            if (this.OnVerbindung != null)
+            foreach (var item in verbEingeschraenkt)
             {
-                foreach (var item in verbEingeschraenkt)
-                {
-                    OnVerbindung(item);
-                }
+                this.OnVerbindung(item);
             }
         }
 
+        /// <summary>
+        /// The verbindungenerzeugen.
+        /// </summary>
+        /// <param name="pfad">
+        /// The pfad.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Verbindung[]"/>.
+        /// </returns>
         private Verbindung[] Verbindungenerzeugen(Pfad pfad)
         {
-            var verbindungen = new List<Verbindung>();
             var linienName = pfad.Strecken.First().Linienname;
             var startHalteStelle = pfad.Starthaltestellenname;
 
             var abfahrtszeiten = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(linienName, startHalteStelle);
+            var verbindungen = new Verbindung[abfahrtszeiten.Length];
 
-            for (int i = 0; i < abfahrtszeiten.Length; i++)
+            for (int index = 0; index < abfahrtszeiten.Length; index++)
             {
+                var zeit = abfahrtszeiten[index];
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
 
-                verbindung.Fahrtzeiten[0].Abfahrtszeit = abfahrtszeiten[i];
-                verbindungen.Add(verbindung);
+                // Startzeit der Verbindung ist nur hier bekannt
+                verbindung.Fahrtzeiten[0] = new Fahrtzeit();
+                verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
+                verbindungen[index] = verbindung;
             }
 
-            return verbindungen.ToArray();
+            return verbindungen;
         }
 
+        /// <summary>
+        /// The fahrzeiten zuordnen.
+        /// </summary>
+        /// <param name="verbindungen">
+        /// The verbindungen.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Verbindung[]"/>.
+        /// </returns>
         private Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
         {
             foreach (var verbindung in verbindungen)
             {
+                // Init
                 var startHalteStelle = verbindung.Pfad.Starthaltestellenname;
-                var startZeitAtHalteStelle = verbindung.Fahrtzeiten[0].Abfahrtszeit;
+                var ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[0].Abfahrtszeit;
 
                 for (var i = 0; i < verbindung.Pfad.Strecken.Length; i++)
                 {
-                    verbindung.Fahrtzeiten[i].Ankunftszeit = startZeitAtHalteStelle;
+                    var linienName = verbindung.Pfad.Strecken[i].Linienname;
 
-                    var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(
-                        verbindung.Pfad.Strecken[i].Linienname,
-                        startHalteStelle);
+                    // Alle Zeiten an dieser Haltestelle
+                    var startZeitenHalteStelle = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(
+                        linienName, startHalteStelle);
 
-                    verbindung.Fahrtzeiten[i].Ankunftszeit = startZeitAtHalteStelle + dauer;
+                    // Nehme die nächste verfügbare Abfahrtszeit
+                    // Rollator use case wird nicht berücksichtigt
+                    verbindung.Fahrtzeiten[i].Abfahrtszeit = startZeitenHalteStelle.First(zeit => zeit >= ankunftzeitLetzteStrecke);
 
+                    // Frage the Fahrplan über die Dauer der Strecke
+                    var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
+
+                    // Ankunftszeit
+                    verbindung.Fahrtzeiten[i].Ankunftszeit = verbindung.Fahrtzeiten[i].Abfahrtszeit + dauer;
+
+                    // Merke für nächste Runde
                     startHalteStelle = verbindung.Pfad.Strecken[i].Zielhaltestellenname;
+                    ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[i].Ankunftszeit;
                 }
-            }            
+            }
 
-            return verbindungen.ToArray();
+            return verbindungen;
         }
 
+        /// <summary>
+        /// The einschraenken nach fahrzeit.
+        /// </summary>
+        /// <param name="verbindungen">
+        /// The verbindungen.
+        /// </param>
+        /// <param name="startZeit">
+        /// The start zeit.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Verbindung[]"/>.
+        /// </returns>
         private Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
         {
-            return verbindungen.ToArray(); ;
+            return verbindungen.Where(verb => verb.Fahrtzeiten[0].Abfahrtszeit >= startZeit).ToArray();
         }
     }
 }
