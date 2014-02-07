@@ -71,7 +71,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] Verbindungenerzeugen(Pfad pfad)
+        internal Verbindung[] Verbindungenerzeugen(Pfad pfad)
         {
             var linienName = pfad.Strecken.First().Linienname;
             var startHalteStelle = pfad.Starthaltestellenname;
@@ -85,8 +85,7 @@
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
 
                 // Startzeit der Verbindung ist nur hier bekannt
-                verbindung.Fahrtzeiten[0] = new Fahrtzeit();
-                verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
+                verbindung.Fahrtzeiten[0] = new Fahrtzeit { Abfahrtszeit = zeit };
                 verbindungen[index] = verbindung;
             }
 
@@ -102,7 +101,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
+        internal Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
         {
             foreach (var verbindung in verbindungen)
             {
@@ -122,7 +121,7 @@
                     // Rollator use case wird nicht berücksichtigt
                     verbindung.Fahrtzeiten[i].Abfahrtszeit = startZeitenHalteStelle.First(zeit => zeit >= ankunftzeitLetzteStrecke);
 
-                    // Frage the Fahrplan über die Dauer der Strecke
+                    // Frage den Fahrplan über die Dauer der Strecke
                     var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
 
                     // Ankunftszeit
@@ -149,7 +148,7 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        private Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
+        internal Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
         {
             return verbindungen.Where(verb => verb.Fahrtzeiten[0].Abfahrtszeit >= startZeit).ToArray();
         }
