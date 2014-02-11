@@ -39,21 +39,21 @@ namespace rsfa.Netzplanberechnung
                 }
             }
 
-            return alleHalteStellen.Values;
+            return this.alleHalteStellen.Values;
         }
 
         private Haltestelle FindeOderErzeugeHalteStelle(String haltestellenName)
         {
-            if (!alleHalteStellen.ContainsKey(haltestellenName))
+            if (!this.alleHalteStellen.ContainsKey(haltestellenName))
             {
-                alleHalteStellen[haltestellenName] = new Haltestelle
+                this.alleHalteStellen[haltestellenName] = new Haltestelle
                 {
                     Strecken = new Strecke[] { },
                     Name = haltestellenName
                 };
             }
 
-            return alleHalteStellen[haltestellenName];
+            return this.alleHalteStellen[haltestellenName];
         }
 
         private void Strecke_Hinzufügen(Haltestelle halteStelle, string linienname, Haltestelle ziel)
