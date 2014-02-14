@@ -240,9 +240,12 @@ namespace PfadbestimmungTests
             Int32 gefundenePfade = 0;
             target.OnPfad += (pfad) =>
             {
-                gefundenePfade++;
-                Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
+                if (pfad != null)
+                {
+                    gefundenePfade++;
+                    Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
+                    Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
+                }
             };
 
             target.Alle_Pfade_bestimmen(netzplan, start, ziel);

@@ -42,6 +42,8 @@ namespace rsfa.pfadbestimmung
          var initialKandidat = new PfadKandidat(starthaltestelle);
 
          this.BackTrack(initialKandidat);
+
+         this.OutputEndOfSteam();
       }
 
       private void BackTrack(PfadKandidat kandidat)
@@ -123,6 +125,14 @@ namespace rsfa.pfadbestimmung
          {
             this.OnPfad(kandidat.ErstellePfad());
          }
+      }
+
+      private void OutputEndOfSteam()
+      {
+          if (this.OnPfad != null)
+          {
+              this.OnPfad(null);
+          }
       }
    }
 }
