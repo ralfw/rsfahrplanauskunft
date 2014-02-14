@@ -52,13 +52,23 @@
                 return;
             }
 
-            var verbOhneZeit = this.Verbindungenerzeugen(pfad);
-            var verbMitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
-            var verbEingeschraenkt = this.EinschraenkenNachFahrzeit(verbMitZeit, startzeit);
-
-            foreach (var item in verbEingeschraenkt)
+            foreach (var verbOhneZeit in this.Verbindungenerzeugen(pfad))
             {
-                this.OnVerbindung(item);
+                var verbindungmitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
+                
+                if (verbindungmitZeit == null)
+                {
+                    continue;
+                }
+
+                var verbindungEingeschraenkt = this.EinschraenkenNachFahrzeit(verbindungmitZeit, startzeit);
+
+                if (verbindungEingeschraenkt == null)
+                {
+                    continue;
+                }
+
+                this.OnVerbindung(verbindungEingeschraenkt);
             }
         }
 
@@ -105,63 +115,53 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        internal Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
+        internal Verbindung FahrzeitenZuordnen(Verbindung verbindung)
         {
-            var tempVerbindungen = new List<Verbindung>(verbindungen.Length);
+            // Init
+            var startHalteStelle = verbindung.Pfad.Starthaltestellenname;
+            var ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[0].Abfahrtszeit;
+            var gueltigeVerbindung = false;
 
-            foreach (var verbindung in verbindungen)
+            for (var i = 0; i < verbindung.Pfad.Strecken.Length; i++)
             {
-                // Init
-                var startHalteStelle = verbindung.Pfad.Starthaltestellenname;
-                var ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[0].Abfahrtszeit;
-                var gueltigeVerbindung = false;
+                var linienName = verbindung.Pfad.Strecken[i].Linienname;
 
-                for (var i = 0; i < verbindung.Pfad.Strecken.Length; i++)
+                // Alle Zeiten an dieser Haltestelle
+                var startZeitenHalteStelle = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(
+                    linienName, startHalteStelle);
+
+                // Nehme die nächste verfügbare Abfahrtszeit
+                // Rollator use case wird nicht berücksichtigt
+                foreach (var dateTime in startZeitenHalteStelle)
                 {
-                    var linienName = verbindung.Pfad.Strecken[i].Linienname;
-
-                    // Alle Zeiten an dieser Haltestelle
-                    var startZeitenHalteStelle = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(
-                        linienName, startHalteStelle);
-
-                    // Nehme die nächste verfügbare Abfahrtszeit
-                    // Rollator use case wird nicht berücksichtigt
-                    foreach (var dateTime in startZeitenHalteStelle)
+                    if (dateTime < ankunftzeitLetzteStrecke)
                     {
-                        if (dateTime < ankunftzeitLetzteStrecke)
-                        {
-                            continue;
-                        }
-                        
-                        verbindung.Fahrtzeiten[i].Abfahrtszeit = dateTime;
-                        gueltigeVerbindung = true;
-                        break;
+                        continue;
                     }
 
-                    // Frage den Fahrplan über die Dauer der Strecke
-                    var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
-
-                    // Ankunftszeit
-                    verbindung.Fahrtzeiten[i].Ankunftszeit = verbindung.Fahrtzeiten[i].Abfahrtszeit + dauer;
-
-                    // Merke für nächste Runde
-                    startHalteStelle = verbindung.Pfad.Strecken[i].Zielhaltestellenname;
-                    ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[i].Ankunftszeit;
+                    verbindung.Fahrtzeiten[i].Abfahrtszeit = dateTime;
+                    gueltigeVerbindung = true;
+                    break;
                 }
 
-                if (gueltigeVerbindung)
-                {
-                    tempVerbindungen.Add(verbindung);
-                }
+                // Frage den Fahrplan über die Dauer der Strecke
+                var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
+
+                // Ankunftszeit
+                verbindung.Fahrtzeiten[i].Ankunftszeit = verbindung.Fahrtzeiten[i].Abfahrtszeit + dauer;
+
+                // Merke für nächste Runde
+                startHalteStelle = verbindung.Pfad.Strecken[i].Zielhaltestellenname;
+                ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[i].Ankunftszeit;
             }
 
-            return tempVerbindungen.ToArray();
+            return gueltigeVerbindung ? verbindung : null;
         }
 
         /// <summary>
         /// Schraenkt die gegebenen Verbindungen nach fahrzeit ein.
         /// </summary>
-        /// <param name="verbindungen">
+        /// <param name="verbindung">
         /// Die verbindungen.
         /// </param>
         /// <param name="startZeit">
@@ -170,9 +170,9 @@
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
         /// </returns>
-        internal Verbindung[] EinschraenkenNachFahrzeit(IEnumerable<Verbindung> verbindungen, DateTime startZeit)
+        internal Verbindung EinschraenkenNachFahrzeit(Verbindung verbindung, DateTime startZeit)
         {
-            return verbindungen.Where(verb => verb.Fahrtzeiten[0].Abfahrtszeit >= startZeit).ToArray();
+            return verbindung.Fahrtzeiten[0].Abfahrtszeit >= startZeit ? verbindung : null;
         }
     }
 }
