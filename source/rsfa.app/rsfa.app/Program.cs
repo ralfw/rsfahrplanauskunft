@@ -33,6 +33,7 @@ namespace rsfa.app
             {
                 var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
                 visualisierer.SchreibeDotFile(netzplan, kommando.Ausgabedatei);
+                ////visualisierer.SchreibeCSharpFile(netzplan, kommando.Ausgabedatei);
             }
 
             pfade.Alle_Pfade_bestimmen(netzplan, kommando.Starthaltestellenname, kommando.Zielhaltestellenname);
