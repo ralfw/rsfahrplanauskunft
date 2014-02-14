@@ -12,6 +12,11 @@ namespace NetzplanberechnungTests
     {
         private Dictionary<string, string[]> linienHaltestellen = new Dictionary<string, string[]>(); 
         
+        public TestFahrplanprovider()
+        {
+            this.InitHaltestellen();
+        }
+
         public DateTime[] Abfahrtszeiten_bei_Haltestelle(string linienname, string haltestellenname)
         {
             throw new NotImplementedException();
@@ -22,9 +27,14 @@ namespace NetzplanberechnungTests
             throw new NotImplementedException();
         }
 
-        public string[] Haltestellen_für_Linie(string linienname)
+        public TimeSpan Fahrtdauer_für_Strecke(string linienname, string haltestellenname)
         {
             throw new NotImplementedException();
+        }
+
+        public string[] Haltestellen_für_Linie(string linienname)
+        {
+            return this.linienHaltestellen[linienname];
         }
 
         public string[] Liniennamen
@@ -37,9 +47,11 @@ namespace NetzplanberechnungTests
 
         private void InitHaltestellen()
         {
-            this.linienHaltestellen.Add("S1Ost", new string[] { "Stachus", "Marienplatz", "Isartor", "Rosenheimer"});
-            this.linienHaltestellen.Add("S1Ost", new string[] { "Rosenheimer", "Isartor", "Marienplatz", "Stachus" });
+            this.linienHaltestellen.Add("S1OOst", new string[] { "Stachus", "Marienplatz", "Isartor", "Rosenheimer" });
+            this.linienHaltestellen.Add("S1OWest", new string[] { "Rosenheimer", "Isartor", "Marienplatz", "Stachus" });
             this.linienHaltestellen.Add("S2", new string[] { "Stachus", "Marienplatz", "Isartor", "Rosenheimer" });
+            this.linienHaltestellen.Add("U3", new string[] { "Sendlinger", "Marienplatz", "Odeons" });
+
         }
     }
 }

@@ -83,9 +83,13 @@
             {
                 var zeit = abfahrtszeiten[index];
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
+                for (int i = 0; i < pfad.Strecken.Length; i++)
+                {
+                    verbindung.Fahrtzeiten[i] = new Fahrtzeit();
+                }
 
                 // Startzeit der Verbindung ist nur hier bekannt
-                verbindung.Fahrtzeiten[0] = new Fahrtzeit { Abfahrtszeit = zeit };
+                verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
                 verbindungen[index] = verbindung;
             }
 

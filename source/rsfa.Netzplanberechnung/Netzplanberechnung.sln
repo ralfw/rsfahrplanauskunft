@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netzplanberechnung", "Netzplanberechnung.csproj", "{0FF2D90A-E6CE-4473-BFDB-6BFE7A623191}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetzplanberechnungTests", "Tests\NetzplanberechnungTests\NetzplanberechnungTests.csproj", "{99A1C934-1899-4223-A4D3-8E00AA0845B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{0FF2D90A-E6CE-4473-BFDB-6BFE7A623191}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FF2D90A-E6CE-4473-BFDB-6BFE7A623191}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FF2D90A-E6CE-4473-BFDB-6BFE7A623191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A1C934-1899-4223-A4D3-8E00AA0845B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A1C934-1899-4223-A4D3-8E00AA0845B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A1C934-1899-4223-A4D3-8E00AA0845B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A1C934-1899-4223-A4D3-8E00AA0845B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

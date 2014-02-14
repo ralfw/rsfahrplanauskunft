@@ -14,7 +14,7 @@ namespace rsfa.app
             var konsole = new Konsolenprovider();
 
             var fpprov = new FahrplanProvider.FahrplanProvider();
-            var netz = new Netzplanberechnung.Netzplanberechnung();
+            var netz = new Netzplanberechnung.Netzplanberechnung(fpprov);
             var pfade = new pfadbestimmung.Pfadbestimmung();
             var verb = new VerbindungsErzeugung.VerbindungsErzeugung(fpprov);
             var bewert = new Verbindungsbewertung();

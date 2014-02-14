@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VerbindungsErzeugungTest
 {
-    [TestClass]
+    //[TestClass]
     public class VerbindungsErzeugungTest
     {
         
