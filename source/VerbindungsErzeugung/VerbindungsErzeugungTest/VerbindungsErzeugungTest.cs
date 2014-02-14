@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using rsfa.contracts;
 using rsfa.contracts.daten;
+using System.Diagnostics;
 
 namespace VerbindungsErzeugung
 {
@@ -267,8 +268,6 @@ namespace VerbindungsErzeugung
             p.Starthaltestellenname = "H1";
             p.Strecken = new Strecke[1];
             p.Strecken[0] = s;
-
-            this.TestContext.WriteLine("Gleich krachts");
 
             target.Verbindugen_zu_Pfad_bilden(p, Time(8, 0));
         }
