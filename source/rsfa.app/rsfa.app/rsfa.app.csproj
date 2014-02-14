@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Kommandozeilenportal.cs" />
     <Compile Include="Konsolenprovider.cs" />
+    <Compile Include="NetzplanVisualisierer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

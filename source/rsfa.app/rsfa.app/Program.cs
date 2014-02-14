@@ -13,6 +13,8 @@ namespace rsfa.app
 
     class Program
     {
+        private readonly NetzplanVisualisierer netzplanVisualisierer = new NetzplanVisualisierer();
+
         static void Main(string[] args)
         {
             var kommando = new Kommandozeilenportal(args);
@@ -29,32 +31,9 @@ namespace rsfa.app
             bewert.OnVerbindungenKomplett += konsole.Verbindungen_anzeigen;
 
             var netzplan = netz.Netzplan_berechnen();
-            SchreibeDotFile(netzplan);
+            var visualisierer = new NetzplanVisualisierer();
+            visualisierer.SchreibeDotFile(netzplan);
             pfade.Alle_Pfade_bestimmen(netzplan, kommando.Starthaltestellenname, kommando.Zielhaltestellenname);
         }
-
-        private static void SchreibeDotFile(Netzplan netzplan)
-        {
-            File.WriteAllLines(@"C:\tmp\dot1.txt", new[] { GenerateDot(netzplan) });
-        }
-
-        private static String GenerateDot(Netzplan netzplan)
-        {
-            var sb = new StringBuilder()
-               .AppendLine("digraph Netzplan {");
-
-            foreach (var haltestelle in netzplan.Haltestellen)
-            {
-                foreach (var strecke in haltestelle.Strecken)
-                {
-                    sb.AppendFormat("  \"{0}\" -> \"{1}\" [label=\"{2}\"];", haltestelle.Name, strecke.Zielhaltestellenname, strecke.Linienname);
-                    sb.AppendLine();
-                }
-            }
-
-            sb.AppendLine("}");
-            return sb.ToString();
-        }
-
     }
 }
