@@ -34,10 +34,6 @@ namespace VerbindungsErzeugung
             this.results = new List<Verbindung>();
             target.OnVerbindung += MerkeVerbindungInListe;
 
-            Strecke s = new Strecke();
-            s.Linienname = "U1";
-            s.Zielhaltestellenname = "H2";
-
             target.Verbindugen_zu_Pfad_bilden(null, Time(8, 0));
             Assert.AreEqual(1, this.results.Count);
             Assert.IsNull(this.results[0]);
@@ -250,6 +246,23 @@ namespace VerbindungsErzeugung
             target.Verbindugen_zu_Pfad_bilden(pfad, Time(9, 07));
 
             Assert.AreEqual(0, this.results.Count);
+        }
+
+        /// <summary>
+        /// Wenn kein Event definiert ist wird eine Exception geworfen
+        /// </summary>
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void TestNullEvent()
+        {
+            var target = new VerbindungsErzeugung(new FahrplanProviderMock());
+            this.results = new List<Verbindung>();
+
+            Strecke s = new Strecke();
+            s.Linienname = "U1";
+            s.Zielhaltestellenname = "H2";
+
+            target.Verbindugen_zu_Pfad_bilden(null, Time(8, 0));
         }
 
         /// <summary>
