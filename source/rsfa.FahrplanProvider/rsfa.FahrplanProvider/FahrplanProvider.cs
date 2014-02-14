@@ -58,7 +58,7 @@ namespace rsfa.FahrplanProvider
                               new TimeSpan[]
                                   {
                                       TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2),
-                                      TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)
+                                      TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)
                                   }),
                     new Linie("Kaiser-Franz Linie 8 Ost",
                               new string[]
@@ -88,7 +88,7 @@ namespace rsfa.FahrplanProvider
                               new TimeSpan[]
                                   {
                                       TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2),
-                                      TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)
+                                      TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2)
                                   })
                 };
         }
