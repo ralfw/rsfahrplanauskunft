@@ -88,12 +88,13 @@ namespace rsfa.pfadbestimmung
             return false;
          }
 
-         if (kandidat.Strecken.Last().Zielhaltestellenname == this.starthaltestelle.Name)
+         var lastHaltestellenname = kandidat.Strecken.Last().Zielhaltestellenname;
+         if (lastHaltestellenname == this.starthaltestelle.Name)
          {
             return true;
          }
 
-         if (kandidat.Strecken.Count(s => s.Zielhaltestellenname == this.zielhaltestelle.Name) > 1)
+         if (kandidat.Strecken.Count(s => s.Zielhaltestellenname == lastHaltestellenname) > 1)
          {
             return true;
          }

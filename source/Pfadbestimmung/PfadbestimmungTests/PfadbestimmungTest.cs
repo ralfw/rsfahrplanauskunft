@@ -135,6 +135,46 @@ namespace PfadbestimmungTests
          }
         };
 
+        private Netzplan KomplexerNetzplanMitSchleifeVorZiel = new Netzplan()
+        {
+            Haltestellen = new[]
+         {
+            new Haltestelle
+            {
+               Name = StartHaltestellenname,
+               Strecken = new[]
+               {
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Mitte1" },
+               },
+            },
+            new Haltestelle
+            {
+               Name = "Mitte1",
+               Strecken = new[]
+               {
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Mitte2" },
+               },
+            },
+            new Haltestelle
+            {
+               Name = "Mitte2",
+               Strecken = new[]
+               {
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = ZielHaltestellenname },
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Mitte1" },
+               },
+            },
+            new Haltestelle
+            {
+               Name = ZielHaltestellenname,
+               Strecken = new[]
+               {
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Mitte2" },
+               },
+            },
+         }
+        };
+
         [TestMethod]
         public void EinfacherNetzplanMitEinemPfad()
         {
@@ -167,6 +207,15 @@ namespace PfadbestimmungTests
         {
             var netzplan = this.KomplexerNetzplan3;
             var expectedNumberOfPaths = 2;
+
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
+        }
+
+        [TestMethod]
+        public void KomplexerNetzplanMitSchleifeVorZielUndEinemPfad()
+        {
+            var netzplan = this.KomplexerNetzplanMitSchleifeVorZiel;
+            var expectedNumberOfPaths = 1;
 
             this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
