@@ -24,6 +24,7 @@ namespace rsfa.app
                     headerShown = true;
                 }
 
+                Console.WriteLine();
                 Console.WriteLine(
                     "Abfahrt {0}, Ankunft {1}, Reisezeit {2}",
                     v.Fahrtzeiten.First().Abfahrtszeit,
@@ -33,12 +34,17 @@ namespace rsfa.app
                 for (int i = 0; i < anzahlStrecken; i++)
                 {
                     Console.WriteLine(
-                        "  mit {0} bis {1}",
+                        "  mit {0} bis {1}, Abfahrt {2}, Ankunft {3}",
                         v.Pfad.Strecken[i].Linienname,
-                        v.Pfad.Strecken[i].Zielhaltestellenname);
+                        v.Pfad.Strecken[i].Zielhaltestellenname,
+                        v.Fahrtzeiten[i].Abfahrtszeit.TimeOfDay,
+                        v.Fahrtzeiten[i].Ankunftszeit.TimeOfDay);
                 }
-
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Der R&S Express wünscht eine gute Fahrt! Zum Beenden eine Taste drücken");
+            Console.ReadKey();
         }
     }
 }
