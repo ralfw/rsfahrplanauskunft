@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerbindungsErzeugung", "VerbindungsErzeugung\VerbindungsErzeugung.csproj", "{BA547EF3-ED0A-43B5-81EC-91D7FFCB70DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerbindungsErzeugungTest", "UnitTestProject1\VerbindungsErzeugungTest.csproj", "{8F410B33-E38F-46E8-9091-37B0EE0A9BD5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerbindungsErzeugungTest", "VerbindungsErzeugungTest\VerbindungsErzeugungTest.csproj", "{8F410B33-E38F-46E8-9091-37B0EE0A9BD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
