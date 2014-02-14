@@ -166,7 +166,16 @@ namespace rsfa.FahrplanProvider
         /// </summary>
         public string[] Liniennamen
         {
-            get { return _linien.Select(l => l.LinienName).ToArray(); }
+            get
+            {
+                var list = new List<string>();
+                foreach (var item in this._linien)
+                {
+                    list.Add(item.LinienName);
+                }
+
+                return list.ToArray();
+            }
         }
     }
 }
