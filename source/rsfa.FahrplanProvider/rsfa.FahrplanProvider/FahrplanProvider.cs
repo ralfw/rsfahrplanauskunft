@@ -117,7 +117,20 @@ namespace rsfa.FahrplanProvider
                 haltestellenOffset += linie.Timespan[index];
                 if (linie.Haltestellen[index] == haltestellenname)
                 {
-                    return new DateTime[] { new DateTime(2014, 2, 7, 16, 38, 0) + haltestellenOffset + linienOffset, new DateTime(2014, 2, 7, 16, 43, 0) + haltestellenOffset, new DateTime(2014, 2, 7, 16, 48, 0) + haltestellenOffset + linienOffset, };
+                    DateTime start = new DateTime(
+                        DateTime.Today.Year,
+                        DateTime.Today.Month,
+                        DateTime.Today.Day,
+                        16,
+                        38,
+                        0);
+
+                    return new DateTime[] 
+                    {
+                        start + TimeSpan.FromMinutes(0) + haltestellenOffset + linienOffset, 
+                        start + TimeSpan.FromMinutes(5) + haltestellenOffset + linienOffset, 
+                        start + TimeSpan.FromMinutes(10) + haltestellenOffset + linienOffset, 
+                    };
                 }
             }
 
