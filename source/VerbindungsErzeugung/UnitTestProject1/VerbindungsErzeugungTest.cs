@@ -101,6 +101,36 @@ namespace VerbindungsErzeugung
         }
 
         [TestMethod]
+        public void TestZweiStreckenMehrereVerbindungen()
+        {
+            var target = new VerbindungsErzeugung(new FahrplanProviderMock());
+            this.results = new List<Verbindung>();
+
+            target.OnVerbindung += MerkeVerbindungInListe;
+
+            Pfad pfad = new Pfad();
+            pfad.Starthaltestellenname = "H1";
+            pfad.Strecken = new Strecke[2];
+
+            Strecke s = new Strecke();
+            s.Linienname = "U1";
+            s.Zielhaltestellenname = "H2";
+            pfad.Strecken[0] = s;
+
+            s = new Strecke();
+            s.Linienname = "U3";
+            s.Zielhaltestellenname = "H3";
+            pfad.Strecken[1] = s;
+
+            target.Verbindugen_zu_Pfad_bilden(pfad, Time(8, 40));
+
+            Assert.AreEqual(3, this.results.Count);
+            Assert.AreEqual(Time(8, 48), this.results[0].Fahrtzeiten[1].Ankunftszeit);
+            Assert.AreEqual(Time(8, 58), this.results[1].Fahrtzeiten[1].Ankunftszeit);
+            Assert.AreEqual(Time(9, 08), this.results[2].Fahrtzeiten[1].Ankunftszeit);
+        }
+
+        [TestMethod]
         public void TestU1U2U3()
         {
             var target = new VerbindungsErzeugung(new FahrplanProviderMock());
