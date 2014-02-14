@@ -1,4 +1,4 @@
-﻿namespace rsfa.app
+namespace rsfa.Netzplanberechnung
 {
     using System;
     using System.IO;
