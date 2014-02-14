@@ -1,6 +1,7 @@
 ﻿namespace VerbindungsErzeugung
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using rsfa.contracts;
@@ -78,19 +79,17 @@
         /// The pfad.
         /// </param>
         /// <returns>
-        /// The <see cref="Verbindung[]"/>.
+        /// The <see cref="Verbindung"/>.
         /// </returns>
-        internal Verbindung[] Verbindungenerzeugen(Pfad pfad)
+        internal IEnumerable<Verbindung> Verbindungenerzeugen(Pfad pfad)
         {
             var linienName = pfad.Strecken.First().Linienname;
             var startHalteStelle = pfad.Starthaltestellenname;
 
             var abfahrtszeiten = this.fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(linienName, startHalteStelle);
-            var verbindungen = new Verbindung[abfahrtszeiten.Length];
 
-            for (int index = 0; index < abfahrtszeiten.Length; index++)
+            foreach (var zeit in abfahrtszeiten)
             {
-                var zeit = abfahrtszeiten[index];
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
                 
                 for (int i = 0; i < pfad.Strecken.Length; i++)
@@ -100,10 +99,8 @@
 
                 // Startzeit der Verbindung ist nur hier bekannt
                 verbindung.Fahrtzeiten[0].Abfahrtszeit = zeit;
-                verbindungen[index] = verbindung;
+                yield return verbindung;
             }
-
-            return verbindungen;
         }
 
         /// <summary>
