@@ -8,11 +8,13 @@ namespace rsfa.Netzplanberechnung
 
     public class NetzplanVisualisierer
     {
-        public void SchreibeDotFile(Netzplan netzplan)
+        public void SchreibeDotFile(Netzplan netzplan, string dateiName)
         {
-            File.WriteAllLines(@"C:\tmp\dot1.txt", new[] { this.GenerateDot(netzplan) });
+            File.WriteAllLines(dateiName, new[] { this.GenerateDot(netzplan) });
         }
 
+        // shamelessly stolen from Pfadbestimmung
+        // cut and paste strings to http://graphviz-dev.appspot.com/
         private String GenerateDot(Netzplan netzplan)
         {
             var sb = new StringBuilder()

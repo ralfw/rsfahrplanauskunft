@@ -28,8 +28,13 @@ namespace rsfa.app
             bewert.OnVerbindungenKomplett += konsole.Verbindungen_anzeigen;
 
             var netzplan = netz.Netzplan_berechnen();
-            var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
-            visualisierer.SchreibeDotFile(netzplan);
+
+            if (kommando.IstDebug)
+            {
+                var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
+                visualisierer.SchreibeDotFile(netzplan, kommando.Ausgabedatei);
+            }
+
             pfade.Alle_Pfade_bestimmen(netzplan, kommando.Starthaltestellenname, kommando.Zielhaltestellenname);
         }
     }

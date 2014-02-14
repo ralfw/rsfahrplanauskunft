@@ -27,5 +27,23 @@ namespace rsfa.app
         {
             get { return DateTime.Parse(_args[2]); }
         }
+
+        public bool IstDebug
+        {
+            get
+            {                 
+                if (_args.Length < 4) return false;
+                return _args[3].Equals("-d");
+            }
+        }
+
+        public string Ausgabedatei
+        {
+            get
+            {
+                if (_args.Length < 5) return string.Empty;
+                return _args[4];
+            }
+        }
     }
 }
