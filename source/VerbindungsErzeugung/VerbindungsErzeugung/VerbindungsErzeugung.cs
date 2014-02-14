@@ -31,7 +31,7 @@
         public event Action<Verbindung> OnVerbindung;
 
         /// <summary>
-        /// The verbindugen_zu_ pfad_bilden.
+        /// Aus Pfaden Verbindungen bilden.
         /// </summary>
         /// <param name="pfad">
         /// The pfad.
@@ -63,7 +63,7 @@
         }
 
         /// <summary>
-        /// The verbindungenerzeugen.
+        /// Erzeugt die Verbindungen aus den gegebenen Pfaden.
         /// </summary>
         /// <param name="pfad">
         /// The pfad.
@@ -97,7 +97,7 @@
         }
 
         /// <summary>
-        /// The fahrzeiten zuordnen.
+        /// Ordnet den Verbindungen die Fahrzeiten zu.
         /// </summary>
         /// <param name="verbindungen">
         /// The verbindungen.
@@ -107,11 +107,14 @@
         /// </returns>
         internal Verbindung[] FahrzeitenZuordnen(Verbindung[] verbindungen)
         {
+            var tempVerbindungen = new List<Verbindung>(verbindungen.Length);
+
             foreach (var verbindung in verbindungen)
             {
                 // Init
                 var startHalteStelle = verbindung.Pfad.Starthaltestellenname;
                 var ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[0].Abfahrtszeit;
+                var gueltigeVerbindung = false;
 
                 for (var i = 0; i < verbindung.Pfad.Strecken.Length; i++)
                 {
@@ -123,7 +126,17 @@
 
                     // Nehme die nächste verfügbare Abfahrtszeit
                     // Rollator use case wird nicht berücksichtigt
-                    verbindung.Fahrtzeiten[i].Abfahrtszeit = startZeitenHalteStelle.First(zeit => zeit >= ankunftzeitLetzteStrecke);
+                    foreach (var dateTime in startZeitenHalteStelle)
+                    {
+                        if (dateTime < ankunftzeitLetzteStrecke)
+                        {
+                            continue;
+                        }
+                        
+                        verbindung.Fahrtzeiten[i].Abfahrtszeit = dateTime;
+                        gueltigeVerbindung = true;
+                        break;
+                    }
 
                     // Frage den Fahrplan über die Dauer der Strecke
                     var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
@@ -135,19 +148,24 @@
                     startHalteStelle = verbindung.Pfad.Strecken[i].Zielhaltestellenname;
                     ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[i].Ankunftszeit;
                 }
+
+                if (gueltigeVerbindung)
+                {
+                    tempVerbindungen.Add(verbindung);
+                }
             }
 
-            return verbindungen;
+            return tempVerbindungen.ToArray();
         }
 
         /// <summary>
-        /// The einschraenken nach fahrzeit.
+        /// Schraenkt die gegebenen Verbindungen nach fahrzeit ein.
         /// </summary>
         /// <param name="verbindungen">
-        /// The verbindungen.
+        /// Die verbindungen.
         /// </param>
         /// <param name="startZeit">
-        /// The start zeit.
+        /// Die start zeit.
         /// </param>
         /// <returns>
         /// The <see cref="Verbindung[]"/>.
