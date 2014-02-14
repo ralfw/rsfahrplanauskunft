@@ -13,24 +13,27 @@ namespace PfadbestimmungTests
     [TestClass]
     public class PfadbestimmungTest
     {
+        private const String StartHaltestellenname = "Start";
+        private const String ZielHaltestellenname = "Ziel";
+
         private Netzplan EinfachsterNetzplan = new Netzplan()
         {
             Haltestellen = new[]
          {
             new Haltestelle
             {
-               Name = "Start",
+               Name = StartHaltestellenname,
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Ziel" },
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = ZielHaltestellenname },
                },
             },
             new Haltestelle
             {
-               Name = "Ziel",
+               Name = ZielHaltestellenname,
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Start" },
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = StartHaltestellenname },
                },
             },
          }
@@ -42,7 +45,7 @@ namespace PfadbestimmungTests
          {
             new Haltestelle
             {
-               Name = "Start",
+               Name = StartHaltestellenname,
                Strecken = new[]
                {
                   new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Mitte" },
@@ -53,15 +56,15 @@ namespace PfadbestimmungTests
                Name = "Mitte",
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Ziel" },
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = ZielHaltestellenname },
                },
             },
             new Haltestelle
             {
-               Name = "Ziel",
+               Name = ZielHaltestellenname,
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Start" },
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = StartHaltestellenname },
                },
             },
          }
@@ -73,7 +76,7 @@ namespace PfadbestimmungTests
          {
             new Haltestelle
             {
-               Name = "Start",
+               Name = StartHaltestellenname,
                Strecken = new[]
                {
                   new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Mitte" },
@@ -84,16 +87,16 @@ namespace PfadbestimmungTests
                Name = "Mitte",
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Ziel" },
-                  new Strecke { Linienname = "U2", Zielhaltestellenname = "Ziel" },
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = ZielHaltestellenname },
+                  new Strecke { Linienname = "U2", Zielhaltestellenname = ZielHaltestellenname },
                },
             },
             new Haltestelle
             {
-               Name = "Ziel",
+               Name = ZielHaltestellenname,
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Start" },
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = StartHaltestellenname },
                },
             },
          }
@@ -105,7 +108,7 @@ namespace PfadbestimmungTests
          {
             new Haltestelle
             {
-               Name = "Start",
+               Name = StartHaltestellenname,
                Strecken = new[]
                {
                   new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Mitte" },
@@ -116,14 +119,14 @@ namespace PfadbestimmungTests
                Name = "Mitte",
                Strecken = new[]
                {
-                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = "Ziel" },
-                  new Strecke { Linienname = "Bus", Zielhaltestellenname = "Ziel" },
-                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Start" },
+                  new Strecke { Linienname = "U1 Ost", Zielhaltestellenname = ZielHaltestellenname },
+                  new Strecke { Linienname = "Bus", Zielhaltestellenname = ZielHaltestellenname },
+                  new Strecke { Linienname = "U1 West", Zielhaltestellenname = StartHaltestellenname },
                },
             },
             new Haltestelle
             {
-               Name = "Ziel",
+               Name = ZielHaltestellenname,
                Strecken = new[]
                {
                   new Strecke { Linienname = "U1 West", Zielhaltestellenname = "Mitte" },
@@ -135,87 +138,56 @@ namespace PfadbestimmungTests
         [TestMethod]
         public void EinfacherNetzplanMitEinemPfad()
         {
-            var target = new Pfadbestimmung();
-            var start = "Start";
-            var ziel = "Ziel";
+            var netzplan = this.EinfachsterNetzplan;
+            var expectedNumberOfPaths = 1;
 
-            Int32 gefundenePfade = 0;
-            target.OnPfad += (pfad) =>
-            {
-                gefundenePfade++;
-                Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
-            };
-
-            target.Alle_Pfade_bestimmen(this.EinfachsterNetzplan, start, ziel);
-            Assert.AreEqual(1, gefundenePfade, "Keine pfade gefunden");
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
         [TestMethod]
         public void KomplexerNetzplanMitEinemPfad()
         {
-            var target = new Pfadbestimmung();
-            var start = "Start";
-            var ziel = "Ziel";
+            var netzplan = this.KomplexerNetzplan;
+            var expectedNumberOfPaths = 1;
 
-            Int32 gefundenePfade = 0;
-            target.OnPfad += (pfad) =>
-            {
-                gefundenePfade++;
-                Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
-            };
-
-            target.Alle_Pfade_bestimmen(this.KomplexerNetzplan, start, ziel);
-            Assert.AreEqual(1, gefundenePfade, "Keine pfade gefunden");
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
         [TestMethod]
         public void KomplexerNetzplanMitZwoaPfaden()
         {
-            var target = new Pfadbestimmung();
-            var start = "Start";
-            var ziel = "Ziel";
+            var netzplan = this.KomplexerNetzplan2;
+            var expectedNumberOfPaths = 2;
 
-            Int32 gefundenePfade = 0;
-            target.OnPfad += (pfad) =>
-            {
-                gefundenePfade++;
-                Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
-            };
-
-            target.Alle_Pfade_bestimmen(this.KomplexerNetzplan2, start, ziel);
-            Assert.AreEqual(2, gefundenePfade, "Anzahl Pfade passt nicht");
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
         [TestMethod]
         public void KomplexerNetzplanMitZwoaPfaden3()
         {
-            var target = new Pfadbestimmung();
-            var start = "Start";
-            var ziel = "Ziel";
+            var netzplan = this.KomplexerNetzplan3;
+            var expectedNumberOfPaths = 2;
 
-            Int32 gefundenePfade = 0;
-            target.OnPfad += (pfad) =>
-               {
-                   gefundenePfade++;
-                   Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                   Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
-               };
-
-            target.Alle_Pfade_bestimmen(this.KomplexerNetzplan3, start, ziel);
-            Assert.AreEqual(2, gefundenePfade, "Anzahl Pfade passt nicht");
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
         [TestMethod]
         public void NetzplanSehrLangemPfad()
         {
-            var target = new Pfadbestimmung();
             var netzplan = this.GenerateLinearNetzplan(1000);
-            var start = "Start";
-            var ziel = "Ziel";
+            var expectedNumberOfPaths = 1;
 
+            this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
+        }
+
+        private void AssertPathSearchOutcome(Netzplan netzplan, int expectedNumberOfPaths)
+        {
+            this.AssertPathSearchOutcome(netzplan, StartHaltestellenname, ZielHaltestellenname, expectedNumberOfPaths);
+        }
+
+        private void AssertPathSearchOutcome(Netzplan netzplan, string start, string ziel, int expectedNumberOfPaths)
+        {
+            var target = new Pfadbestimmung();
             Int32 gefundenePfade = 0;
             target.OnPfad += (pfad) =>
             {
@@ -225,7 +197,7 @@ namespace PfadbestimmungTests
             };
 
             target.Alle_Pfade_bestimmen(netzplan, start, ziel);
-            Assert.AreEqual(1, gefundenePfade, "Anzahl Pfade passt nicht");
+            Assert.AreEqual(expectedNumberOfPaths, gefundenePfade, "Anzahl Pfade passt nicht");
         }
 
         [TestMethod]
@@ -262,7 +234,7 @@ namespace PfadbestimmungTests
             {
                 Haltestellen = new Haltestelle[numberOfHaltestellen]
             };
-            netzplan.Haltestellen[0] = new Haltestelle { Name = "Start" };
+            netzplan.Haltestellen[0] = new Haltestelle { Name = StartHaltestellenname };
 
             // loop over all intermideate terminals
             for (int i = 1; i < numberOfHaltestellen; i++)
@@ -271,7 +243,7 @@ namespace PfadbestimmungTests
                 var targetName = String.Format("H{0}", i);
                 if (i == numberOfHaltestellen - 1)
                 {
-                    targetName = "Ziel";
+                    targetName = ZielHaltestellenname;
                 }
 
                 source.Strecken = new[]
