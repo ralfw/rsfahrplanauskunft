@@ -143,7 +143,55 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 5), res.Fahrtzeiten[1].Ankunftszeit);
             Assert.AreEqual(Time(9, 8), res.Fahrtzeiten[2].Abfahrtszeit);
             Assert.AreEqual(Time(9, 12), res.Fahrtzeiten[2].Ankunftszeit);
+        }
 
+        [TestMethod]
+        public void TestStartzeitZuSpät()
+        {
+            var target = new VerbindungsErzeugung(new FahrplanProviderMock());
+            this.results = new List<Verbindung>();
+
+            target.OnVerbindung += MerkeVerbindungInListe;
+
+            Strecke s = new Strecke();
+            s.Linienname = "U1";
+            s.Zielhaltestellenname = "H2";
+
+            Pfad pfad = new Pfad();
+            pfad.Starthaltestellenname = "H1";
+            pfad.Strecken = new Strecke[1];
+            pfad.Strecken[0] = s;
+
+            target.Verbindugen_zu_Pfad_bilden(pfad, Time(10, 0));
+
+            Assert.AreEqual(0, this.results.Count);
+        }
+
+        [TestMethod]
+        public void TestUmsteigezeitZuSpät()
+        {
+            var target = new VerbindungsErzeugung(new FahrplanProviderMock());
+            this.results = new List<Verbindung>();
+
+            target.OnVerbindung += MerkeVerbindungInListe;
+
+            Pfad pfad = new Pfad();
+            pfad.Starthaltestellenname = "H1";
+            pfad.Strecken = new Strecke[2];
+
+            Strecke s = new Strecke();
+            s.Linienname = "U2";
+            s.Zielhaltestellenname = "H2";
+            pfad.Strecken[0] = s;
+
+            s = new Strecke();
+            s.Linienname = "U1";
+            s.Zielhaltestellenname = "H3";
+            pfad.Strecken[1] = s;
+
+            target.Verbindugen_zu_Pfad_bilden(pfad, Time(9, 07));
+
+            Assert.AreEqual(0, this.results.Count);
         }
 
         /// <summary>
