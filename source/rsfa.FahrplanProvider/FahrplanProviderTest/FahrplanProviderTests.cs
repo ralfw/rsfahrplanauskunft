@@ -16,6 +16,21 @@ namespace rsfa.FahrplanProvider
         }
 
         [TestMethod]
+        public void Abfahrtszeiten_bei_HaltestelleConsistencyTest()
+        {
+            var fahrplanProvider = new FahrplanProvider();
+            foreach (var linie in fahrplanProvider.Liniennamen)
+            {
+                foreach (var haltestelle in fahrplanProvider.Haltestellen_für_Linie(linie))
+                {
+                    var abfahrtszeiten = fahrplanProvider.Abfahrtszeiten_bei_Haltestelle(linie, haltestelle);
+                    Assert.IsTrue(abfahrtszeiten.Length > 0,
+                        String.Format("Keine Abfahrszeit für '{0}' an Haltestelle '{1}'", linie, haltestelle));
+                }
+            }
+        }
+
+        [TestMethod]
         public void Fahrtdauer_für_StreckeTest()
         {
             var fahrplanProvider = new FahrplanProvider();
