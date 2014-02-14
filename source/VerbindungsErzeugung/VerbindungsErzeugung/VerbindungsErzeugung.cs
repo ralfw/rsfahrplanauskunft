@@ -1,7 +1,6 @@
 ﻿namespace VerbindungsErzeugung
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     using rsfa.contracts;
@@ -43,7 +42,7 @@
         {
             if (this.OnVerbindung == null)
             {
-                return;
+                throw new InvalidOperationException("Event OnVerbindung is not specified.");
             }
 
             if (pfad == null)
@@ -52,16 +51,16 @@
                 return;
             }
 
-            foreach (var verbOhneZeit in this.Verbindungenerzeugen(pfad))
+            foreach (var verbindungOhneZeit in this.Verbindungenerzeugen(pfad))
             {
-                var verbindungmitZeit = this.FahrzeitenZuordnen(verbOhneZeit);
+                var verbindungMitZeit = this.FahrzeitenZuordnen(verbindungOhneZeit);
                 
-                if (verbindungmitZeit == null)
+                if (verbindungMitZeit == null)
                 {
                     continue;
                 }
 
-                var verbindungEingeschraenkt = this.EinschraenkenNachFahrzeit(verbindungmitZeit, startzeit);
+                var verbindungEingeschraenkt = this.EinschraenkenNachFahrzeit(verbindungMitZeit, startzeit);
 
                 if (verbindungEingeschraenkt == null)
                 {
@@ -93,6 +92,7 @@
             {
                 var zeit = abfahrtszeiten[index];
                 var verbindung = new Verbindung { Pfad = pfad, Fahrtzeiten = new Fahrtzeit[pfad.Strecken.Length] };
+                
                 for (int i = 0; i < pfad.Strecken.Length; i++)
                 {
                     verbindung.Fahrtzeiten[i] = new Fahrtzeit();
@@ -109,11 +109,11 @@
         /// <summary>
         /// Ordnet den Verbindungen die Fahrzeiten zu.
         /// </summary>
-        /// <param name="verbindungen">
+        /// <param name="verbindung">
         /// The verbindungen.
         /// </param>
         /// <returns>
-        /// The <see cref="Verbindung[]"/>.
+        /// The <see cref="Verbindung"/>.
         /// </returns>
         internal Verbindung FahrzeitenZuordnen(Verbindung verbindung)
         {
@@ -144,6 +144,11 @@
                     break;
                 }
 
+                if (!gueltigeVerbindung)
+                {
+                    return null;
+                }
+                
                 // Frage den Fahrplan über die Dauer der Strecke
                 var dauer = this.fahrplanProvider.Fahrtdauer_für_Strecke(linienName, startHalteStelle);
 
@@ -155,7 +160,7 @@
                 ankunftzeitLetzteStrecke = verbindung.Fahrtzeiten[i].Ankunftszeit;
             }
 
-            return gueltigeVerbindung ? verbindung : null;
+            return verbindung;
         }
 
         /// <summary>
@@ -168,7 +173,7 @@
         /// Die start zeit.
         /// </param>
         /// <returns>
-        /// The <see cref="Verbindung[]"/>.
+        /// The <see cref="Verbindung"/>.
         /// </returns>
         internal Verbindung EinschraenkenNachFahrzeit(Verbindung verbindung, DateTime startZeit)
         {
