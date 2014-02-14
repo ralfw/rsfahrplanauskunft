@@ -11,6 +11,9 @@ namespace VerbindungsErzeugung
     {
         private List<Verbindung> results;
 
+        /// <summary>
+        /// Test für Konstruktor
+        /// </summary>
         [TestMethod]
         public void ConstructorTest()
         {
@@ -18,6 +21,12 @@ namespace VerbindungsErzeugung
             Assert.IsNotNull(target);
         }
 
+        /// <summary>
+        /// Als Pfad wird null übergeben, dann wird auch eine Verbindung geliefert die null ist
+        /// </summary>
+        /// <remarks>
+        /// Die null dient als Endekriterium für die weitere Verarbeitung.
+        /// </remarks>
         [TestMethod]
         public void TestWithNull()
         {
@@ -34,6 +43,9 @@ namespace VerbindungsErzeugung
             Assert.IsNull(this.results[0]);
         }
 
+        /// <summary>
+        /// Test der Strecke H1 -> H2 mit U1, einzelnes Segment, nur eine Verbindung
+        /// </summary>
         [TestMethod]
         public void TestEinzelstrecke()
         {
@@ -63,6 +75,9 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 2), res.Fahrtzeiten[0].Ankunftszeit);
         }
 
+        /// <summary>
+        /// Test mit zwei Strecken H1 -> H2 -> H3 ohne Umsteigen mit U1
+        /// </summary>
         [TestMethod]
         public void TestZweiStrecken()
         {
@@ -100,6 +115,9 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 3), res.Fahrtzeiten[1].Ankunftszeit);
         }
 
+        /// <summary>
+        /// Test zwei Strecken H1 -> H2 mit U1, und H2 -> H3 mit U3 mit 3 möglichen Zeiten
+        /// </summary>
         [TestMethod]
         public void TestZweiStreckenMehrereVerbindungen()
         {
@@ -130,6 +148,9 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 08), this.results[2].Fahrtzeiten[1].Ankunftszeit);
         }
 
+        /// <summary>
+        /// Test von 3 Strecken mit unterschiedlichen Linien, 2x umsteigen
+        /// </summary>
         [TestMethod]
         public void TestU1U2U3()
         {
@@ -175,6 +196,9 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 12), res.Fahrtzeiten[2].Ankunftszeit);
         }
 
+        /// <summary>
+        /// Test mit einer Startzeit die später als die letzte Abfahrtszeit ist
+        /// </summary>
         [TestMethod]
         public void TestStartzeitZuSpät()
         {
@@ -197,6 +221,10 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(0, this.results.Count);
         }
 
+        /// <summary>
+        /// Test mit zwei Strecken, wobei es eine Verbindung für die erste Strecke gibt, aber
+        /// keine Verbindung mehr für die zweite Strecke
+        /// </summary>
         [TestMethod]
         public void TestUmsteigezeitZuSpät()
         {
