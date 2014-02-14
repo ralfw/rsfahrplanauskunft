@@ -11,6 +11,8 @@ namespace VerbindungsErzeugung
     {
         private List<Verbindung> results;
 
+        public TestContext TestContext { get; set; }
+
         /// <summary>
         /// Test für Konstruktor
         /// </summary>
@@ -261,8 +263,14 @@ namespace VerbindungsErzeugung
             Strecke s = new Strecke();
             s.Linienname = "U1";
             s.Zielhaltestellenname = "H2";
+            Pfad p = new Pfad();
+            p.Starthaltestellenname = "H1";
+            p.Strecken = new Strecke[1];
+            p.Strecken[0] = s;
 
-            target.Verbindugen_zu_Pfad_bilden(null, Time(8, 0));
+            this.TestContext.WriteLine("Gleich krachts");
+
+            target.Verbindugen_zu_Pfad_bilden(p, Time(8, 0));
         }
 
         /// <summary>
