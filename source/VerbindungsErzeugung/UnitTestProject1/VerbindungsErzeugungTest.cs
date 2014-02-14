@@ -100,6 +100,52 @@ namespace VerbindungsErzeugung
             Assert.AreEqual(Time(9, 3), res.Fahrtzeiten[1].Ankunftszeit);
         }
 
+        [TestMethod]
+        public void TestU1U2U3()
+        {
+            var target = new VerbindungsErzeugung(new FahrplanProviderMock());
+            this.results = new List<Verbindung>();
+
+            target.OnVerbindung += MerkeVerbindungInListe;
+
+            Pfad pfad = new Pfad();
+            pfad.Starthaltestellenname = "H1";
+            pfad.Strecken = new Strecke[3];
+
+            Strecke s = new Strecke();
+            s.Linienname = "U1";
+            s.Zielhaltestellenname = "H2";
+            pfad.Strecken[0] = s;
+
+            s = new Strecke();
+            s.Linienname = "U2";
+            s.Zielhaltestellenname = "H3";
+            pfad.Strecken[1] = s;
+
+            s = new Strecke();
+            s.Linienname = "U3";
+            s.Zielhaltestellenname = "H4";
+            pfad.Strecken[2] = s;
+
+            target.Verbindugen_zu_Pfad_bilden(pfad, Time(9, 0));
+
+            Assert.AreEqual(1, this.results.Count);
+            var res = this.results[0];
+            Assert.AreEqual("H1", res.Pfad.Starthaltestellenname);
+            Assert.AreEqual(3, res.Pfad.Strecken.Length);
+            Assert.AreEqual("H2", res.Pfad.Strecken[0].Zielhaltestellenname);
+            Assert.AreEqual("H3", res.Pfad.Strecken[1].Zielhaltestellenname);
+            Assert.AreEqual("H4", res.Pfad.Strecken[2].Zielhaltestellenname);
+            Assert.AreEqual(3, res.Fahrtzeiten.Length);
+            Assert.AreEqual(Time(9, 0), res.Fahrtzeiten[0].Abfahrtszeit);
+            Assert.AreEqual(Time(9, 2), res.Fahrtzeiten[0].Ankunftszeit);
+            Assert.AreEqual(Time(9, 4), res.Fahrtzeiten[1].Abfahrtszeit);
+            Assert.AreEqual(Time(9, 5), res.Fahrtzeiten[1].Ankunftszeit);
+            Assert.AreEqual(Time(9, 8), res.Fahrtzeiten[2].Abfahrtszeit);
+            Assert.AreEqual(Time(9, 12), res.Fahrtzeiten[2].Ankunftszeit);
+
+        }
+
         /// <summary>
         /// Action für die Resultate. Die Verbindung wird in die Resultatliste eingetragen
         /// </summary>
