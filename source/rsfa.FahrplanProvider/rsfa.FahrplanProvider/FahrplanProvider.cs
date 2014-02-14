@@ -107,7 +107,13 @@ namespace rsfa.FahrplanProvider
         {
             get
             {
-                return new string[3] { "Kaiser-Franz Linie 8", "Transrapid Linie Stoiber", "Hans-Dampf-Seehofer Linie" };
+                var list = new List<string>();
+                foreach (var item in this.Linien)
+                {
+                    list.Add(item.LinienNamen);
+                }
+
+                return list.ToArray();
             }
         }
 
