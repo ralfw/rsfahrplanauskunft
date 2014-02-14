@@ -209,11 +209,32 @@ namespace PfadbestimmungTests
       }
 
       [TestMethod]
+      public void NetzplanSehrLangemPfad()
+      {
+          var target = new Pfadbestimmung();
+          var netzplan = this.GenerateLinearNetzplan(1000);
+          var start = "Start";
+          var ziel = "Ziel";
+
+          Int32 gefundenePfade = 0;
+          target.OnPfad += (pfad) =>
+          {
+              gefundenePfade++;
+              Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
+              Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
+          };
+
+          target.Alle_Pfade_bestimmen(netzplan, start, ziel);
+          Assert.AreEqual(1, gefundenePfade, "Anzahl Pfade passt nicht");
+      }
+
+      [TestMethod]
       public void ZeichneNetzpläne()
       {
          // cut and paste strings to http://graphviz-dev.appspot.com/
          var dot1 = this.GenerateDot(this.EinfachsterNetzplan);
          var dot3 = this.GenerateDot(this.KomplexerNetzplan3);
+         var dotBla = this.GenerateDot(this.GenerateLinearNetzplan(10));
       }
 
       private String GenerateDot(Netzplan netzplan)
@@ -232,6 +253,35 @@ namespace PfadbestimmungTests
 
          sb.AppendLine("}");
          return sb.ToString();
+      }
+
+      private Netzplan GenerateLinearNetzplan(Int32 numberOfHaltestellen)
+      {
+          const string linienName = "U1";
+          var netzplan = new Netzplan()
+          {
+            Haltestellen = new Haltestelle[numberOfHaltestellen]
+          };
+          netzplan.Haltestellen[0] = new Haltestelle { Name = "Start" };
+
+          // loop over all intermideate terminals
+          for (int i = 1; i < numberOfHaltestellen; i++)
+	      {
+		      var source =  netzplan.Haltestellen[i - 1];
+              var targetName = String.Format("H{0}", i);
+              if (i == numberOfHaltestellen - 1)
+              {
+                  targetName = "Ziel";
+              }
+
+              source.Strecken = new[]
+              {
+                  new Strecke { Linienname = linienName, Zielhaltestellenname = targetName }
+              };
+              netzplan.Haltestellen[i] = new Haltestelle { Name = targetName, Strecken = new Strecke[0] };
+	      }
+
+          return netzplan;
       }
    }
 }
