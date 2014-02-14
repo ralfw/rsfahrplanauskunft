@@ -7,14 +7,11 @@ using rsfa.verbindungsbewertung;
 namespace rsfa.app
 {
     using System.IO;
-
     using rsfa.contracts;
     using rsfa.contracts.daten;
 
     class Program
     {
-        private readonly NetzplanVisualisierer netzplanVisualisierer = new NetzplanVisualisierer();
-
         static void Main(string[] args)
         {
             var kommando = new Kommandozeilenportal(args);
@@ -31,7 +28,7 @@ namespace rsfa.app
             bewert.OnVerbindungenKomplett += konsole.Verbindungen_anzeigen;
 
             var netzplan = netz.Netzplan_berechnen();
-            var visualisierer = new NetzplanVisualisierer();
+            var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
             visualisierer.SchreibeDotFile(netzplan);
             pfade.Alle_Pfade_bestimmen(netzplan, kommando.Starthaltestellenname, kommando.Zielhaltestellenname);
         }
