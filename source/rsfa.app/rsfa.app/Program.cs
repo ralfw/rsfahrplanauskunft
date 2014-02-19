@@ -22,19 +22,14 @@ namespace rsfa.app
             var pfade = new pfadbestimmung.Pfadbestimmung();
             var verb = new VerbindungsErzeugung.VerbindungsErzeugung(fpprov);
             var bewert = new Verbindungsbewertung();
+            var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
 
             pfade.OnPfad += pfad => verb.Verbindugen_zu_Pfad_bilden(pfad, kommando.Startzeit);
             verb.OnVerbindung += bewert.Verbindungen_bewerten;
             bewert.OnVerbindungenKomplett += konsole.Verbindungen_anzeigen;
 
             var netzplan = netz.Netzplan_berechnen();
-
-            if (kommando.IstDebug)
-            {
-                var visualisierer = new Netzplanberechnung.NetzplanVisualisierer();
-                visualisierer.SchreibeDotFile(netzplan, kommando.Ausgabedatei);
-                ////visualisierer.SchreibeCSharpFile(netzplan, kommando.Ausgabedatei);
-            }
+            visualisierer.GebeAus(kommando.IstDebug, netzplan, kommando.Ausgabedatei);
 
             pfade.Alle_Pfade_bestimmen(netzplan, kommando.Starthaltestellenname, kommando.Zielhaltestellenname);
         }

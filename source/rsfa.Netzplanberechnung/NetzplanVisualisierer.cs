@@ -10,6 +10,14 @@ namespace rsfa.Netzplanberechnung
 
     public class NetzplanVisualisierer
     {
+        public void GebeAus(Boolean schreibeWirklich, Netzplan netzplan, string dateiName)
+        {
+            if (schreibeWirklich)
+            {
+                this.SchreibeDotFile(netzplan, dateiName);
+            }
+        }
+
         public void SchreibeDotFile(Netzplan netzplan, string dateiName)
         {
             File.WriteAllLines(dateiName, new[] { this.GenerateDot(netzplan) });
