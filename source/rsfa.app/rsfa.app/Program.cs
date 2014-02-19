@@ -1,15 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using rsfa.contracts;
+using rsfa.contracts.daten;
 using rsfa.verbindungsbewertung;
 
 namespace rsfa.app
 {
-    using System.IO;
-    using rsfa.contracts;
-    using rsfa.contracts.daten;
-
     class Program
     {
         static void Main(string[] args)
