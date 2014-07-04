@@ -258,6 +258,17 @@ namespace PfadbestimmungTests
             this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
         }
 
+        [TestMethod]
+        public void ZeichneRandomNetzplan()
+        {
+            // cut and paste strings to http://graphviz-dev.appspot.com/
+            var dot1 = this.GenerateDot(this.EinfachsterNetzplan);
+            var dot3 = this.GenerateDot(this.KomplexerNetzplan3);
+            var dotBla = this.GenerateDot(this.GenerateLinearNetzplan(10));
+
+            var randomPlan = this.GenerateDot(new RandomNetzplanGenerator(42).Netzplan_berechnen());
+        }
+
         private void AssertPathSearchOutcome(Netzplan netzplan, int expectedNumberOfPaths)
         {
             this.AssertPathSearchOutcome(netzplan, StartHaltestellenname, ZielHaltestellenname, expectedNumberOfPaths);
