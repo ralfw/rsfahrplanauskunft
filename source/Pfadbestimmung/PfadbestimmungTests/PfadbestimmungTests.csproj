@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MatrixNetzplanGenerator.cs" />
     <Compile Include="PfadbestimmungTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

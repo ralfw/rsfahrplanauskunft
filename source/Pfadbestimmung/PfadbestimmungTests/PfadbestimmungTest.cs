@@ -253,6 +253,24 @@ namespace PfadbestimmungTests
         }
 
         [TestMethod]
+        public void MatrixNetzplanTest1()
+        {
+            var generator = new MatrixNetzplanGenerator(3, 3);
+            var netzplan = generator.BerechneNetzplan();
+            var dot = this.GenerateDot(netzplan);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void MatrixNetzplanTest2()
+        {
+            var generator = new MatrixNetzplanGenerator(5, 5);
+            var netzplan = generator.BerechneNetzplan();
+            var dot = this.GenerateDot(netzplan);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
         public void ZeichneNetzpläne()
         {
             // cut and paste strings to http://graphviz-dev.appspot.com/
