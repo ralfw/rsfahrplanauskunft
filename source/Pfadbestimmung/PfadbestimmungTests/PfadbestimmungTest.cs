@@ -233,6 +233,7 @@ namespace PfadbestimmungTests
 
         // base: 12 Pfade gefunden in 00:00:00.0000775 (154.838709677419 pfade/ms)
         // immutable: 12 Pfade gefunden in 00:00:00.0000652 (184.049079754601 pfade/ms)
+        // manual reverse implementation: 12 Pfade gefunden in 00:00:00.0000585 (205.128205128205 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixKlein()
         {
@@ -244,6 +245,7 @@ namespace PfadbestimmungTests
 
         // base: 6762 Pfade gefunden in 00:00:00.1020290 (66.2752746768076 pfade/ms)
         // immutable: 6762 Pfade gefunden in 00:00:00.0904301 (74.7759871989525 pfade/ms)
+        // manual reverse implementation: 6762 Pfade gefunden in 00:00:00.0808063 (83.6815941331307 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixMittel()
         {
@@ -255,6 +257,7 @@ namespace PfadbestimmungTests
 
         // base: 910480 Pfade gefunden in 00:00:24.8572389 (36.6283642227054 pfade/ms)
         // immutable stack: 910480 Pfade gefunden in 00:00:21.3353373 (42.6747413081676 pfade/ms)
+        // manual reverse implementation: 910480 Pfade gefunden in 00:00:19.6791892 (46.266133769373 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixGross()
         {

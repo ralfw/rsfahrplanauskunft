@@ -28,10 +28,21 @@ namespace rsfa.pfadbestimmung
          var pfad = new Pfad()
          {
             Starthaltestellenname = this.Starthaltestelle.Name,
-            Strecken = this.Strecken.Reverse().ToArray()
+            Strecken = GetStreckenArray()
          };
 
          return pfad;
+      }
+
+      private Strecke[] GetStreckenArray()
+      {
+          var index = this.strecken.Count;
+          var streckenArray = new Strecke[index];
+          foreach (var strecke in this.strecken)
+          {
+              streckenArray[--index] = strecke;
+          }
+          return streckenArray;
       }
 
       public PfadKandidat Clone()
