@@ -9,24 +9,26 @@ namespace rsfa.pfadbestimmung
 {
    class PfadKandidat
    {
-      private List<Strecke> strecken; 
+      private ImmutableStack<Strecke> strecken; 
 
       public PfadKandidat(Haltestelle starthaltestelle)
       {
          this.Starthaltestelle = starthaltestelle;
-         this.strecken = new List<Strecke>();
+         this.strecken = ImmutableStack<Strecke>.Empty;
       }
 
       public Haltestelle Starthaltestelle { get; private set; }
 
       public IEnumerable<Strecke> Strecken { get { return this.strecken; } }
 
+      public int StreckenCount { get { return this.strecken.Count; } }
+
       public Pfad ErstellePfad()
       {
          var pfad = new Pfad()
          {
             Starthaltestellenname = this.Starthaltestelle.Name,
-            Strecken = this.Strecken.ToArray()
+            Strecken = this.Strecken.Reverse().ToArray()
          };
 
          return pfad;
@@ -34,16 +36,14 @@ namespace rsfa.pfadbestimmung
 
       public PfadKandidat Clone()
       {
-         var klon = new PfadKandidat(this.Starthaltestelle);
-         klon.strecken = new List<Strecke>(this.Strecken);
-         return klon;
+          return (PfadKandidat)this.MemberwiseClone();
       }
 
       internal void AddStrecke(Strecke strecke)
       {
-          this.strecken.Add(strecke);
+          this.strecken = this.strecken.Push(strecke);
       }
 
-      public int StreckenCount { get { return this.strecken.Count; } }
+      public string Zielhaltestellenname { get { return this.strecken.Top.Zielhaltestellenname; } }
    }
 }

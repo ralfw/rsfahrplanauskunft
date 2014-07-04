@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImmutableStack.cs" />
     <Compile Include="Pfadbestimmung.cs" />
     <Compile Include="PfadKandidat.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

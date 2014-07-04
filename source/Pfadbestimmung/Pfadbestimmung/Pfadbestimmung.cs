@@ -66,7 +66,7 @@ namespace rsfa.pfadbestimmung
          }
          else
          {
-            var zielhaltestellenname = kandidat.Strecken.Last().Zielhaltestellenname;
+            var zielhaltestellenname = kandidat.Zielhaltestellenname;
             zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
          }
 
@@ -90,13 +90,13 @@ namespace rsfa.pfadbestimmung
             return false;
          }
 
-         var lastHaltestellenname = kandidat.Strecken.Last().Zielhaltestellenname;
+         var lastHaltestellenname = kandidat.Zielhaltestellenname;
          if (lastHaltestellenname == this.starthaltestelle.Name)
          {
             return true;
          }
 
-         if (kandidat.Strecken.Take(kandidat.StreckenCount - 1).Any(s => s.Zielhaltestellenname == lastHaltestellenname))
+         if (kandidat.Strecken.Skip(1).Any(s => s.Zielhaltestellenname == lastHaltestellenname))
          {
             return true;
          }
@@ -111,7 +111,7 @@ namespace rsfa.pfadbestimmung
             return false;
          }
 
-         if (kandidat.Strecken.Last().Zielhaltestellenname == this.zielhaltestelle.Name)
+         if (kandidat.Zielhaltestellenname == this.zielhaltestelle.Name)
          {
             return true;
          }

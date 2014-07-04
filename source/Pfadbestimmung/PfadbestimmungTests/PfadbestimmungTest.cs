@@ -232,6 +232,7 @@ namespace PfadbestimmungTests
         }
 
         // base: 12 Pfade gefunden in 00:00:00.0000775 (154.838709677419 pfade/ms)
+        // immutable: 12 Pfade gefunden in 00:00:00.0000652 (184.049079754601 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixKlein()
         {
@@ -242,6 +243,7 @@ namespace PfadbestimmungTests
         }
 
         // base: 6762 Pfade gefunden in 00:00:00.1020290 (66.2752746768076 pfade/ms)
+        // immutable: 6762 Pfade gefunden in 00:00:00.0904301 (74.7759871989525 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixMittel()
         {
@@ -252,6 +254,7 @@ namespace PfadbestimmungTests
         }
 
         // base: 910480 Pfade gefunden in 00:00:24.8572389 (36.6283642227054 pfade/ms)
+        // immutable stack: 910480 Pfade gefunden in 00:00:21.3353373 (42.6747413081676 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixGross()
         {
@@ -302,8 +305,8 @@ namespace PfadbestimmungTests
                 if (pfad != null)
                 {
                     gefundenePfade++;
-                    ////Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                    ////Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
+                    Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
+                    Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
                 }
             };
 
