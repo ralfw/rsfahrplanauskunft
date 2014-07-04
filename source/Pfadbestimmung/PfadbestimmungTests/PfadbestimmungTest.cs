@@ -259,7 +259,7 @@ namespace PfadbestimmungTests
         }
 
         [TestMethod]
-        public void ZeichneRandomNetzplan()
+        public void ZeichneNetzplaene()
         {
             // cut and paste strings to http://graphviz-dev.appspot.com/
             var dot1 = this.GenerateDot(this.EinfachsterNetzplan);
