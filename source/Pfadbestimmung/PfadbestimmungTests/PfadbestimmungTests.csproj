@@ -56,6 +56,7 @@
     <Compile Include="MatrixNetzplanGenerator.cs" />
     <Compile Include="PfadbestimmungTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomNetzplanGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Pfadbestimmung\Pfadbestimmung.csproj">
