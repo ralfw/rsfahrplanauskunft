@@ -10,6 +10,8 @@ using System.Text;
 
 namespace PfadbestimmungTests
 {
+    using System.Diagnostics;
+
     [TestClass]
     public class PfadbestimmungTest
     {
@@ -229,6 +231,33 @@ namespace PfadbestimmungTests
             this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
+        [TestMethod]
+        public void NetzplanMatrixKlein()
+        {
+            var generator = new MatrixNetzplanGenerator(3, 3);
+            var netzplan = generator.BerechneNetzplan();
+            var expectedNumberOfPaths = 12;
+            this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
+        }
+
+        [TestMethod]
+        public void NetzplanMatrixMittel()
+        {
+            var generator = new MatrixNetzplanGenerator(5, 5);
+            var netzplan = generator.BerechneNetzplan();
+            var expectedNumberOfPaths = 6762;
+            this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
+        }
+
+        [TestMethod]
+        public void NetzplanMatrixGross()
+        {
+            var generator = new MatrixNetzplanGenerator(6, 6);
+            var netzplan = generator.BerechneNetzplan();
+            var expectedNumberOfPaths = 910480;
+            this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
+        }
+
         private void AssertPathSearchOutcome(Netzplan netzplan, int expectedNumberOfPaths)
         {
             this.AssertPathSearchOutcome(netzplan, StartHaltestellenname, ZielHaltestellenname, expectedNumberOfPaths);
@@ -236,6 +265,7 @@ namespace PfadbestimmungTests
 
         private void AssertPathSearchOutcome(Netzplan netzplan, string start, string ziel, int expectedNumberOfPaths)
         {
+            var sw = new Stopwatch();
             var target = new Pfadbestimmung();
             Int32 gefundenePfade = 0;
             target.OnPfad += (pfad) =>
@@ -243,13 +273,19 @@ namespace PfadbestimmungTests
                 if (pfad != null)
                 {
                     gefundenePfade++;
-                    Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
-                    Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
+                    ////Assert.AreEqual(ziel, pfad.Strecken.Last().Zielhaltestellenname, "Ziel stimmt nicht");
+                    ////Assert.AreEqual(start, pfad.Starthaltestellenname, "Start stimmt nicht");
                 }
             };
 
+            sw.Start();
             target.Alle_Pfade_bestimmen(netzplan, start, ziel);
-            Assert.AreEqual(expectedNumberOfPaths, gefundenePfade, "Anzahl Pfade passt nicht");
+            var elapsed = sw.Elapsed;
+            Console.WriteLine("{0} Pfade gefunden in {1} ({2} pfade/ms)", gefundenePfade, elapsed, gefundenePfade / elapsed.TotalMilliseconds);
+            if (expectedNumberOfPaths >= 0)
+            {
+                Assert.AreEqual(expectedNumberOfPaths, gefundenePfade, "Anzahl Pfade passt nicht");
+            }
         }
 
         [TestMethod]
