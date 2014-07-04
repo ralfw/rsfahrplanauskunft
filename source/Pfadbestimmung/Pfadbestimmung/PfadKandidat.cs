@@ -9,15 +9,17 @@ namespace rsfa.pfadbestimmung
 {
    class PfadKandidat
    {
+      private List<Strecke> strecken; 
+
       public PfadKandidat(Haltestelle starthaltestelle)
       {
          this.Starthaltestelle = starthaltestelle;
-         this.Strecken = new List<Strecke>();
+         this.strecken = new List<Strecke>();
       }
 
       public Haltestelle Starthaltestelle { get; private set; }
 
-      public List<Strecke> Strecken { get; private set; }
+      public IEnumerable<Strecke> Strecken { get { return this.strecken; } }
 
       public Pfad ErstellePfad()
       {
@@ -33,8 +35,15 @@ namespace rsfa.pfadbestimmung
       public PfadKandidat Clone()
       {
          var klon = new PfadKandidat(this.Starthaltestelle);
-         klon.Strecken = new List<Strecke>(this.Strecken);
+         klon.strecken = new List<Strecke>(this.Strecken);
          return klon;
       }
+
+      internal void AddStrecke(Strecke strecke)
+      {
+          this.strecken.Add(strecke);
+      }
+
+      public int StreckenCount { get { return this.strecken.Count; } }
    }
 }

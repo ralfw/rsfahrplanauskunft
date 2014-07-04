@@ -60,7 +60,7 @@ namespace rsfa.pfadbestimmung
          }
 
          Haltestelle zielhaltestelle;
-         if (kandidat.Strecken.Count == 0)
+         if (kandidat.StreckenCount == 0)
          {
             zielhaltestelle = kandidat.Starthaltestelle;
          }
@@ -73,7 +73,7 @@ namespace rsfa.pfadbestimmung
          foreach (var strecke in zielhaltestelle.Strecken)
          {
             var nextKandidat = kandidat.Clone();
-            nextKandidat.Strecken.Add(strecke);
+            nextKandidat.AddStrecke(strecke);
             this.BackTrack(nextKandidat);
          }
       }
@@ -85,7 +85,7 @@ namespace rsfa.pfadbestimmung
 
       private Boolean Reject(PfadKandidat kandidat)
       {
-         if (kandidat.Strecken.Count == 0)
+         if (kandidat.StreckenCount == 0)
          {
             return false;
          }
@@ -96,7 +96,7 @@ namespace rsfa.pfadbestimmung
             return true;
          }
 
-         if (kandidat.Strecken.Count(s => s.Zielhaltestellenname == lastHaltestellenname) > 1)
+         if (kandidat.Strecken.Take(kandidat.StreckenCount - 1).Any(s => s.Zielhaltestellenname == lastHaltestellenname))
          {
             return true;
          }
@@ -106,7 +106,7 @@ namespace rsfa.pfadbestimmung
 
       private Boolean Accept(PfadKandidat kandidat)
       {
-         if (kandidat.Strecken.Count == 0)
+         if (kandidat.StreckenCount == 0)
          {
             return false;
          }

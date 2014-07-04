@@ -231,6 +231,7 @@ namespace PfadbestimmungTests
             this.AssertPathSearchOutcome(netzplan, expectedNumberOfPaths);
         }
 
+        // base: 12 Pfade gefunden in 00:00:00.0000775 (154.838709677419 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixKlein()
         {
@@ -240,6 +241,7 @@ namespace PfadbestimmungTests
             this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
         }
 
+        // base: 6762 Pfade gefunden in 00:00:00.1020290 (66.2752746768076 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixMittel()
         {
@@ -249,6 +251,7 @@ namespace PfadbestimmungTests
             this.AssertPathSearchOutcome(netzplan, "A0", "C2", expectedNumberOfPaths);
         }
 
+        // base: 910480 Pfade gefunden in 00:00:24.8572389 (36.6283642227054 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixGross()
         {
