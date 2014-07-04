@@ -259,6 +259,21 @@ namespace PfadbestimmungTests
         }
 
         [TestMethod]
+        public void RandomNetzplan()
+        {
+            var generator = new RandomNetzplanGenerator(66);
+            var netzplan = generator.Netzplan_berechnen();
+            Assert.IsNotNull(netzplan);
+            Assert.IsNotNull(netzplan.Haltestellen);
+
+            foreach (Haltestelle halteStelle in netzplan.Haltestellen)
+            {
+                Assert.IsNotNull(halteStelle.Strecken);
+                Assert.IsFalse(String.IsNullOrEmpty(halteStelle.Name));
+            }
+        }
+
+        [TestMethod]
         public void ZeichneNetzplaene()
         {
             // cut and paste strings to http://graphviz-dev.appspot.com/
