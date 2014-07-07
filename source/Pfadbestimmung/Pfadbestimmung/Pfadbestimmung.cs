@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 
 namespace rsfa.pfadbestimmung
 {
-   public class Pfadbestimmung : IPfadbestimmung
+    using System.Collections.Concurrent;
+
+    public class Pfadbestimmung : IPfadbestimmung
    {
 
       public event Action<Pfad> OnPfad;
@@ -18,6 +20,8 @@ namespace rsfa.pfadbestimmung
       private Haltestelle starthaltestelle;
 
       private Haltestelle zielhaltestelle;
+ 
+      private ConcurrentStack<PfadKandidat> kandidaten = new ConcurrentStack<PfadKandidat>(); 
 
       public void Alle_Pfade_bestimmen(Netzplan netzplan, string starthaltestellenname, string zielhaltestellenname)
       {
@@ -46,36 +50,47 @@ namespace rsfa.pfadbestimmung
          this.OutputEndOfSteam();
       }
 
-      private void BackTrack(PfadKandidat kandidat)
+      private void BackTrack(PfadKandidat initial_kandidat)
       {
-         if (this.Reject(kandidat))
-         {
-            return;
-         }
+          this.kandidaten = new ConcurrentStack<PfadKandidat>(new[] { initial_kandidat });
 
-         if (this.Accept(kandidat))
-         {
-            this.Output(kandidat);
-            return; // we can also stop here, as everything else will cause an reject anyway
-         }
+          while (!kandidaten.IsEmpty)
+          {
+              PfadKandidat kandidat;
+              if (!this.kandidaten.TryPop(out kandidat))
+              {
+                  throw new InvalidOperationException("Popping kandidat fehlgeschlagen.");
+              }
 
-         Haltestelle zielhaltestelle;
-         if (kandidat.StreckenCount == 0)
-         {
-            zielhaltestelle = kandidat.Starthaltestelle;
-         }
-         else
-         {
-            var zielhaltestellenname = kandidat.Zielhaltestellenname;
-            zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
-         }
+              if (this.Reject(kandidat))
+              {
+                  continue;
+              }
 
-         foreach (var strecke in zielhaltestelle.Strecken)
-         {
-            var nextKandidat = kandidat.Clone();
-            nextKandidat.AddStrecke(strecke);
-            this.BackTrack(nextKandidat);
-         }
+              if (this.Accept(kandidat))
+              {
+                  this.Output(kandidat);
+                  continue; // we can also stop here, as everything else will cause an reject anyway
+              }
+
+              Haltestelle zielhaltestelle;
+              if (kandidat.StreckenCount == 0)
+              {
+                  zielhaltestelle = kandidat.Starthaltestelle;
+              }
+              else
+              {
+                  var zielhaltestellenname = kandidat.Zielhaltestellenname;
+                  zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
+              }
+
+              foreach (var strecke in zielhaltestelle.Strecken)
+              {
+                  var nextKandidat = kandidat.Clone();
+                  nextKandidat.AddStrecke(strecke);
+                  this.kandidaten.Push(nextKandidat);
+              }
+          }
       }
 
       private Haltestelle FindHaltestelle(String haltestellenname)
