@@ -341,15 +341,6 @@ namespace PfadbestimmungTests
             Assert.IsTrue(true);
         }
 
-        [TestMethod]
-        public void ZeichneNetzpläne()
-        {
-            // cut and paste strings to http://graphviz-dev.appspot.com/
-            var dot1 = this.GenerateDot(this.EinfachsterNetzplan);
-            var dot3 = this.GenerateDot(this.KomplexerNetzplan3);
-            var dotBla = this.GenerateDot(this.GenerateLinearNetzplan(10));
-        }
-
         private String GenerateDot(Netzplan netzplan)
         {
             var sb = new StringBuilder()
