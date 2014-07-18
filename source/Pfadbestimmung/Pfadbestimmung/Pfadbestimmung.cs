@@ -25,6 +25,8 @@ namespace rsfa.pfadbestimmung
       private ConcurrentBag<PfadKandidat> kandidaten;
 
         private ConcurrentBag<PfadKandidat> akzeptiertePfadKandidaten;
+
+        private Int32 numberOfRunningWorkers = 0;
  
       public void Alle_Pfade_bestimmen(Netzplan netzplan, string starthaltestellenname, string zielhaltestellenname)
       {
@@ -48,7 +50,7 @@ namespace rsfa.pfadbestimmung
 
          var initialKandidat = new PfadKandidat(starthaltestelle);
 
-         this.StarteSuche(initialKandidat);
+         this.StarteSuche(initialKandidat, numberOfWorkers: 7);
          this.StarteAusgabe();
          
          this.OutputEndOfSteam();
@@ -56,25 +58,52 @@ namespace rsfa.pfadbestimmung
 
       private void StarteAusgabe()
       {
-          PfadKandidat pfadKandidat;
-          while (this.akzeptiertePfadKandidaten.TryTake(out pfadKandidat))
+          do
           {
-              this.Output(pfadKandidat);
-          }
+              PfadKandidat pfadKandidat;
+              while (this.akzeptiertePfadKandidaten.TryTake(out pfadKandidat))
+              {
+                  this.Output(pfadKandidat);
+              }
+              Thread.Yield();
+          } while (this.numberOfRunningWorkers > 0);
       }
 
-      private void StarteSuche(PfadKandidat initial_kandidat)
+      private void StarteSuche(PfadKandidat initial_kandidat, int numberOfWorkers)
       {
           this.kandidaten = new ConcurrentBag<PfadKandidat>(new[] { initial_kandidat });
           this.akzeptiertePfadKandidaten = new ConcurrentBag<PfadKandidat>();
 
-          // test
-          PfadKandidat kandidat;
-          while (this.kandidaten.TryTake(out kandidat))
+          while (numberOfWorkers > 0)
           {
-              this.BackTrack(kandidat);
+              var handle = Task.Run(() => this.ProduziereKandidat());
+                  
+              numberOfWorkers--;
+          }
+
+          while (this.numberOfRunningWorkers == 0)
+          {
+              Thread.Yield();
           }
       }
+
+        private void ProduziereKandidat()
+        {
+            do
+            {
+                Interlocked.Increment(ref this.numberOfRunningWorkers);
+
+                PfadKandidat kandidat;
+                while (this.kandidaten.TryTake(out kandidat))
+                {
+                    this.BackTrack(kandidat);
+                }
+
+                Thread.Yield();
+                Interlocked.Decrement(ref this.numberOfRunningWorkers);
+            }
+            while (this.numberOfRunningWorkers > 0);
+        }
 
         private void BackTrack(PfadKandidat kandidat)
         {
