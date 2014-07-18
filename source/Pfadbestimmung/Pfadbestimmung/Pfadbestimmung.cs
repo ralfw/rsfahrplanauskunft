@@ -22,8 +22,10 @@ namespace rsfa.pfadbestimmung
 
       private Haltestelle zielhaltestelle;
  
-      private ConcurrentBag<PfadKandidat> kandidaten; 
+      private ConcurrentBag<PfadKandidat> kandidaten;
 
+        private ConcurrentBag<PfadKandidat> akzeptiertePfadKandidaten;
+ 
       public void Alle_Pfade_bestimmen(Netzplan netzplan, string starthaltestellenname, string zielhaltestellenname)
       {
          this.netzplan = netzplan;
@@ -47,23 +49,29 @@ namespace rsfa.pfadbestimmung
          var initialKandidat = new PfadKandidat(starthaltestelle);
 
          this.StarteSuche(initialKandidat);
-
+         this.StarteAusgabe();
+         
          this.OutputEndOfSteam();
+      }
+
+      private void StarteAusgabe()
+      {
+          PfadKandidat pfadKandidat;
+          while (this.akzeptiertePfadKandidaten.TryTake(out pfadKandidat))
+          {
+              this.Output(pfadKandidat);
+          }
       }
 
       private void StarteSuche(PfadKandidat initial_kandidat)
       {
           this.kandidaten = new ConcurrentBag<PfadKandidat>(new[] { initial_kandidat });
-          
-          // test
-          while (!kandidaten.IsEmpty)
-          {
-              PfadKandidat kandidat;
-              if (!this.kandidaten.TryTake(out kandidat))
-              {
-                  throw new InvalidOperationException("Kein Kandidat vorhanden");
-              }
+          this.akzeptiertePfadKandidaten = new ConcurrentBag<PfadKandidat>();
 
+          // test
+          PfadKandidat kandidat;
+          while (this.kandidaten.TryTake(out kandidat))
+          {
               this.BackTrack(kandidat);
           }
       }
@@ -77,7 +85,7 @@ namespace rsfa.pfadbestimmung
 
             if (this.Accept(kandidat))
             {
-                this.Output(kandidat);
+                this.akzeptiertePfadKandidaten.Add(kandidat);
                 return;
             }
 

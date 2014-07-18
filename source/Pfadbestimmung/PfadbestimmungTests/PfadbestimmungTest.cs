@@ -261,6 +261,7 @@ namespace PfadbestimmungTests
         // immutable stack: 910480 Pfade gefunden in 00:00:21.3353373 (42.6747413081676 pfade/ms)
         // manual reverse implementation: 910480 Pfade gefunden in 00:00:19.6791892 (46.266133769373 pfade/ms)
         // nicht-rekursiv mit ConcurrentStack: 910480 Pfade gefunden in 00:00:20.1880267 (45.0999997934419 pfade/ms)
+        // nicht-rekursiv mit ConcurrentBag: 910480 Pfade gefunden in 00:00:23 (38 pfade/ms)
         [TestMethod]
         public void NetzplanMatrixGross()
         {
