@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace rsfa.pfadbestimmung
 {
     using System.Collections.Concurrent;
+    using System.Threading;
 
     public class Pfadbestimmung : IPfadbestimmung
    {
@@ -21,7 +22,7 @@ namespace rsfa.pfadbestimmung
 
       private Haltestelle zielhaltestelle;
  
-      private ConcurrentStack<PfadKandidat> kandidaten = new ConcurrentStack<PfadKandidat>(); 
+      private ConcurrentBag<PfadKandidat> kandidaten; 
 
       public void Alle_Pfade_bestimmen(Netzplan netzplan, string starthaltestellenname, string zielhaltestellenname)
       {
@@ -45,55 +46,61 @@ namespace rsfa.pfadbestimmung
 
          var initialKandidat = new PfadKandidat(starthaltestelle);
 
-         this.BackTrack(initialKandidat);
+         this.StarteSuche(initialKandidat);
 
          this.OutputEndOfSteam();
       }
 
-      private void BackTrack(PfadKandidat initial_kandidat)
+      private void StarteSuche(PfadKandidat initial_kandidat)
       {
-          this.kandidaten = new ConcurrentStack<PfadKandidat>(new[] { initial_kandidat });
-
+          this.kandidaten = new ConcurrentBag<PfadKandidat>(new[] { initial_kandidat });
+          
+          // test
           while (!kandidaten.IsEmpty)
           {
               PfadKandidat kandidat;
-              if (!this.kandidaten.TryPop(out kandidat))
+              if (!this.kandidaten.TryTake(out kandidat))
               {
-                  throw new InvalidOperationException("Popping kandidat fehlgeschlagen.");
+                  throw new InvalidOperationException("Kein Kandidat vorhanden");
               }
 
-              if (this.Reject(kandidat))
-              {
-                  continue;
-              }
-
-              if (this.Accept(kandidat))
-              {
-                  this.Output(kandidat);
-                  continue; // we can also stop here, as everything else will cause an reject anyway
-              }
-
-              Haltestelle zielhaltestelle;
-              if (kandidat.StreckenCount == 0)
-              {
-                  zielhaltestelle = kandidat.Starthaltestelle;
-              }
-              else
-              {
-                  var zielhaltestellenname = kandidat.Zielhaltestellenname;
-                  zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
-              }
-
-              foreach (var strecke in zielhaltestelle.Strecken)
-              {
-                  var nextKandidat = kandidat.Clone();
-                  nextKandidat.AddStrecke(strecke);
-                  this.kandidaten.Push(nextKandidat);
-              }
+              this.BackTrack(kandidat);
           }
       }
 
-      private Haltestelle FindHaltestelle(String haltestellenname)
+        private void BackTrack(PfadKandidat kandidat)
+        {
+            if (this.Reject(kandidat))
+            {
+                return;
+            }
+
+            if (this.Accept(kandidat))
+            {
+                this.Output(kandidat);
+                return;
+            }
+
+            Haltestelle zielhaltestelle;
+            if (kandidat.StreckenCount == 0)
+            {
+                zielhaltestelle = kandidat.Starthaltestelle;
+            }
+            else
+            {
+                var zielhaltestellenname = kandidat.Zielhaltestellenname;
+                zielhaltestelle = this.FindHaltestelle(zielhaltestellenname);
+            }
+
+            foreach (var strecke in zielhaltestelle.Strecken)
+            {
+                var nextKandidat = kandidat.Clone();
+                nextKandidat.AddStrecke(strecke);
+                this.kandidaten.Add(nextKandidat);
+            }
+        }
+
+        private Haltestelle FindHaltestelle(String haltestellenname)
       {
          return this.netzplan.Haltestellen.FirstOrDefault(h => h.Name == haltestellenname);
       }
